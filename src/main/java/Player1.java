@@ -4,6 +4,7 @@ import java.util.Set;
 public class Player1 implements Player {
     static final int PLAYER_STARTING_ROW = 0;
     static final int NUMBER_OF_COLUMNS = 8;
+
     private Set<Piece> checkers;
 
     Player1(){

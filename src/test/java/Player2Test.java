@@ -1,6 +1,5 @@
+import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class Player2Test {
 
@@ -8,6 +7,6 @@ public class Player2Test {
 
     @Test
     public void shouldReturnCorrectName(){
-        assertEquals(player.getPlayerName(),"Player2");
+        Assert.assertEquals(player.getPlayerName(),"Player2");
     }
 }

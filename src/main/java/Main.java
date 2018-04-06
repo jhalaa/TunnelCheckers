@@ -3,11 +3,10 @@ class Main {
     public static void main(String[] args) {
         System.out.println("Hello and welcome to tunnel checkers!!");
 
-//        GameBoard gameBoard = new GameBoard();
-//        while(!gameBoard.checkWin()){
-//            gameBoard.play();
-//            gameBoard.toggleCurrentPlayer();
-//        }
+        GameBoard gameBoard = new GameBoard();
+        while(!gameBoard.checkWin()){
+            gameBoard.play();
+        }
 
 
         System.out.println("The winner is --->");

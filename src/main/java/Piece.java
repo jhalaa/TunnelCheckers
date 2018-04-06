@@ -9,7 +9,7 @@ public class Piece {
             this.isKing =isKing;
     }
 
-    public void MakeKing(){
+    public void makeKing(){
         this.isKing = true;
     }
 
