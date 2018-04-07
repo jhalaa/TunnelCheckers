@@ -4,12 +4,11 @@ class Main {
         System.out.println("Hello and welcome to tunnel checkers!!");
 
         GameBoard gameBoard = new GameBoard();
-        while(!gameBoard.checkWin()){
-            gameBoard.play();
-        }
+        gameBoard.play();
 
 
         System.out.println("The winner is --->");
-        //System.out.println(gameBoard.getWinner());
+        System.out.println(gameBoard.checkWin() == 0? "it is a draw!"
+                : (gameBoard.checkWin() > 0? "Player1!" : "Player2!"));
     }
 }

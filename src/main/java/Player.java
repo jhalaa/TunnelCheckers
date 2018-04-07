@@ -1,5 +1,8 @@
+import java.util.Set;
 
 public interface Player {
     String getPlayerName();
-    void move();
+    boolean move();
+    Set<Piece> getCheckers();
+    Set<Piece> getKings();
 }

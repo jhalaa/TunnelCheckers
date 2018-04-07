@@ -6,9 +6,11 @@ public class Player2 implements Player {
     static final int PLAYER_STARTING_ROW = 5;
     static final int NUMBER_OF_COLUMNS = 8;
     private Set<Piece> checkers;
+    private Set<Piece> kings;
 
     Player2(){
         this.checkers.addAll(getPlayerPieces());
+        this.kings = new HashSet<>();
     }
 
     private Set<Piece> getPlayerPieces() {
@@ -24,11 +26,22 @@ public class Player2 implements Player {
         return players;
     }
 
+    public Set<Piece> getCheckers() {
+        return checkers;
+    }
+
+    @Override
+    public Set<Piece> getKings() {
+        return kings;
+    }
+
     public String getPlayerName() {
         return "Player2";
     }
 
-    public void move() {
+    public boolean move() {
+
+        return false;
     }
 
 }

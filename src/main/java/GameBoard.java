@@ -14,13 +14,28 @@ public class GameBoard {
         numberOfTurns = 0;
     }
 
-//    public boolean checkWin(){
-//        if(players.stream().allMatch(player -> player.getOwner().equals(PLAYER.ONE)))
-//            winner=PLAYER.ONE;
-//        if(players.stream().allMatch(player -> player.getOwner().equals(PLAYER.TWO)))
-//            winner=PLAYER.TWO;
-//        return this.winner!=null;
-////    }
+    /**
+     *
+     * @return the int bigger than 0 means player1 wins, smaller than 0 means player2 wins,
+     * and 0 means a draw.
+     */
+    public int checkWin(){
+        if (!player1.move()) {
+            return -1;
+        }
+        if (!player2.move()) {
+            return 1;
+        }
+        if (player1.getCheckers().size() == player2.getCheckers().size()) {
+            return player1.getKings().size() - player2.getKings().size();
+        }
+        return player1.getCheckers().size() - player2.getCheckers().size();
+    }
+
+    public boolean gameOver() {
+        return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
+                || !player1.move() || !player2.move();
+    }
 
     public void play() {
         while(!this.gameOver()){
