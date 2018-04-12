@@ -40,9 +40,9 @@ public class GameBoard {
     public void play() {
         while(!this.gameOver()){
             if(this.numberOfTurns++ %2==0)
-                player1.move();
+                player1.move(player2.getCheckers());
             else
-                player2.move();
+                player2.move(player1.getCheckers());
         }
     }
 

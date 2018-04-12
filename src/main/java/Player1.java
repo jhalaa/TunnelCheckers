@@ -41,7 +41,7 @@ public class Player1 implements Player {
         return "Player1";
     }
 
-    public boolean move() {
+    public boolean move(Set<Piece> oppsitionCheckers) {
         Scanner s = new Scanner(System.in);
         System.out.println("Enter the row number of piece you want to move");
         int row = s.nextInt();
@@ -54,7 +54,7 @@ public class Player1 implements Player {
         System.out.println("Enter the new column number of piece you want to move");
         int newColumn = s.nextInt();
 
-        if(isValidMove(row,column,newRow,newColumn)){
+        if(isValidMove(row,column,newRow,newColumn,oppsitionCheckers)){
             Iterator<Piece> iterator = checkers.iterator();
             while(iterator.hasNext()){
                 Piece peice = iterator.next();
@@ -68,8 +68,23 @@ public class Player1 implements Player {
         return true;
     }
 
-    private boolean isValidMove(int row, int column, int newRow, int newColumn) {
-        return newRow==row+1 && (newColumn==column+1 || newColumn==column-1) && noPlayerinCell(newRow,newColumn);
+    private boolean isValidMove(int row, int column, int newRow, int newColumn,Set<Piece> oppsitionCheckers) {
+
+        return
+                // there is no pawn diagonally opposite and the checker can be moved
+                newRow==row+1 && (newColumn==column+1 || newColumn==column-1) && noPlayerinCell(newRow,newColumn) && noOppositionInCell(newRow,newColumn,oppsitionCheckers);
+            
+    }
+
+    private boolean noOppositionInCell(int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
+        Iterator<Piece> iterator = oppsitionCheckers.iterator();
+        while (iterator.hasNext()) {
+            Piece peice = iterator.next();
+            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean noPlayerinCell(int newRow, int newColumn) {
@@ -82,6 +97,5 @@ public class Player1 implements Player {
         }
         return true;
     }
-
 
 }
