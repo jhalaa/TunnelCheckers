@@ -1,6 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.List;
 import java.util.Set;
 
 public class Player1 implements Player {
@@ -10,14 +10,14 @@ public class Player1 implements Player {
     private Set<Piece> checkers;
     private Set<Piece> kings;
 
-    Player1() {
+    Player1(){
         this.checkers.addAll(getPlayerPieces());
         this.kings = new HashSet<>();
     }
 
     private Set<Piece> getPlayerPieces() {
         Set<Piece> players = new HashSet<>();
-        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW + 3; i++) {
+        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW+3; i++) {
             int j = i % 2 == 0 ? 1 : 0;
             while (j < NUMBER_OF_COLUMNS) {
                 Piece piece = new Piece(i, j, false);
@@ -41,61 +41,86 @@ public class Player1 implements Player {
         return "Player1";
     }
 
-    public boolean move(Set<Piece> oppsitionCheckers) {
-        Scanner s = new Scanner(System.in);
-        System.out.println("Enter the row number of piece you want to move");
-        int row = s.nextInt();
-        System.out.println("Enter the column number of piece you want to move");
-        int column = s.nextInt();
+    public boolean move() {
+        return false;
+    }
 
-        System.out.println("Enter the new row number of piece you want to move");
-        int newRow = s.nextInt();
+    public List<GameBoard> getAllValidMoves(Player opponent) {
+        List<GameBoard> res = new ArrayList<>();
+        for (Piece checker : getCheckers()) {
 
-        System.out.println("Enter the new column number of piece you want to move");
-        int newColumn = s.nextInt();
+        }
 
-        if(isValidMove(row,column,newRow,newColumn,oppsitionCheckers)){
-            Iterator<Piece> iterator = checkers.iterator();
-            while(iterator.hasNext()){
-                Piece peice = iterator.next();
-                if(peice.getRow()==row && peice.getColumn()==column){
-                    checkers.remove(peice);
-                    checkers.add(new Piece(newRow,newColumn,peice.isKing()));
-                    break;
+        res.addAll(getValidJumps(opponent));
+        return res;
+    }
+
+    private int[][] getAdjacent(int x, int y) {
+        int[][] res = new int[4][2];
+
+
+        return res;
+    }
+
+    public GameBoard makeJump(Player opponent, Piece piece, int x, int y) {
+
+    }
+
+    public List<GameBoard> getValidJumps(Player opponent) {
+
+    }
+
+    public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
+        if (!isValidMove(opponent, piece, x, y)) {
+            return new GameBoard(this, opponent, 0);
+        }
+        Piece newPiece = null;
+        if (getKings().contains(piece) || x == NUMBER_OF_COLUMNS - 1) {
+            newPiece = new Piece(x, y, true);
+            getKings().remove(piece);
+            getKings().add(newPiece);
+        }
+        newPiece = new Piece(x, y, false);
+        getCheckers().remove(piece);
+        getCheckers().add(newPiece);
+        return new GameBoard(this, opponent, 1);
+    }
+
+    public boolean isValidMove(Player opponent, Piece piece, int x, int y) {
+        Set<Piece> opponentCheckers = opponent.getCheckers();
+        Piece temp = null;
+        if (x == 0) {
+            temp = new Piece(x, y, true);
+        } else {
+            temp = new Piece(x, y, false);
+        }
+        if (opponentCheckers.contains(temp) || !getCheckers().contains(piece)) {
+            return false;
+        }
+        int preX = piece.getRow();
+        int preY = piece.getColumn();
+        if (!getKings().contains(piece)) {
+            if (preX != 0 && x == preX - 1) {
+                if (preY == 0) {
+                    return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
                 }
+                return y == preY - 1 || y == preY + 1;
+            }
+        } else {
+            if (x == preX + 1) {
+                if (preY == 0) {
+                    return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
+                }
+                return y == preY - 1 || y == preY + 1;
             }
         }
-        return true;
+        return false;
     }
 
-    private boolean isValidMove(int row, int column, int newRow, int newColumn,Set<Piece> oppsitionCheckers) {
 
-        return
-                // there is no pawn diagonally opposite and the checker can be moved
-                newRow==row+1 && (newColumn==column+1 || newColumn==column-1) && noPlayerinCell(newRow,newColumn) && noOppositionInCell(newRow,newColumn,oppsitionCheckers);
-            
+    public boolean isValidJump(Player opponent, Piece piece, int x, int y) {
+
+
+        return false;
     }
-
-    private boolean noOppositionInCell(int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
-        Iterator<Piece> iterator = oppsitionCheckers.iterator();
-        while (iterator.hasNext()) {
-            Piece peice = iterator.next();
-            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean noPlayerinCell(int newRow, int newColumn) {
-        Iterator<Piece> iterator = checkers.iterator();
-        while (iterator.hasNext()) {
-            Piece peice = iterator.next();
-            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

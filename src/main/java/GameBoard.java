@@ -4,14 +4,37 @@ import java.util.Set;
 public class GameBoard {
     private Player player1;
     private Player player2;
-    private int numberOfTurns;
-
-
+    //private int numberOfTurns;
+    private int currentTurn; //0 or 1 to refer to PLAYER1 or PLAYER2
 
     public GameBoard(){
         player1 = new Player1();
         player2 = new Player2();
-        numberOfTurns = 0;
+        //numberOfTurns = 0;
+        currentTurn = 0;
+    }
+
+    public GameBoard(Player player1, Player player2, int currentTurn) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.currentTurn = currentTurn;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+//    public int getNumberOfTurns() {
+//        return numberOfTurns;
+//    }
+
+
+    public int getCurrentTurn() {
+        return currentTurn;
     }
 
     /**
@@ -39,10 +62,13 @@ public class GameBoard {
 
     public void play() {
         while(!this.gameOver()){
-            if(this.numberOfTurns++ %2==0)
-                player1.move(player2.getCheckers());
-            else
-                player2.move(player1.getCheckers());
+            if(this.currentTurn == 0) {
+                player1.move();
+                this.currentTurn = 1;
+            } else {
+                player2.move();
+                this.currentTurn = 0;
+            }
         }
     }
 
