@@ -138,6 +138,14 @@ public class Player1 implements Player {
         return false;
     }
 
+    private int getColumn(int columnNum){
+        if(columnNum<0)
+            return 8+columnNum;
+        else if(columnNum>7)
+            return columnNum%8;
+        else
+            return columnNum;
+    }
 
     public boolean isValidJump(Player opponent, Piece piece, int x, int y) {
         if(x < 0 || x > 7) {
@@ -145,19 +153,19 @@ public class Player1 implements Player {
         }
         int row = piece.getRow();
         int column = piece.getColumn();
-        Piece piece1 = new Piece(row+2,column-2,piece.isKing());
-        Piece piece2 = new Piece(row+2,column+2,piece.isKing());
+        Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());
+        Piece piece2 = new Piece(row+2,getColumn(column+2),piece.isKing());
         if(piece.isKing() && x < row) {
-            Piece piece3 = new Piece(row-2, column-2, true);
-            Piece piece4 = new Piece(row-2, column+2, true);
-            return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, column-1) &&
-                    isEmpty(opponent, row-2, column-2) || isValidJump(opponent, piece3, x, y)
-                    || x==row-2 && y==column+2 && hasPlayers(opponent, row-1,column+1) &&
-                    isEmpty(opponent, row-2, column+2) || isValidJump(opponent, piece4, x, y);
+            Piece piece3 = new Piece(row-2, getColumn(column-2), true);
+            Piece piece4 = new Piece(row-2, getColumn(column+2), true);
+            return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
+                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y)
+                    || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
+                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y);
         }
-        return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, column -1) &&
-                isEmpty(opponent, row +2, column -2) || isValidJump(opponent,piece1,x,y) ||
-                x==row+2 && y== column+2 && hasPlayers(opponent, row +1, column +1) &&
-                        isEmpty(opponent, row +2, column +2) || isValidJump(opponent,piece2,x,y);
+        return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
+                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y) ||
+                x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
+                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y);
     }
 }
