@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Player1 implements Player {
     static final int PLAYER_STARTING_ROW = 0;
@@ -87,6 +84,7 @@ public class Player1 implements Player {
     }
 
     public boolean isValidMove(Player opponent, Piece piece, int x, int y) {
+        // without jumps
         Set<Piece> opponentCheckers = opponent.getCheckers();
         Piece temp = null;
         if (x == 7) {
@@ -119,13 +117,37 @@ public class Player1 implements Player {
             }
             return y == preY - 1 || y == preY + 1;
         }
+
+        //with jumps
+        isValidJump(opponent,piece,x,y);
+
+        return false;
+    }
+
+    private boolean isEmpty(Player opponent,int x, int y) {
+        return !hasPlayers(opponent,x,y) && !hasPlayers(this,x,y);
+    }
+
+    private boolean hasPlayers(Player opponent, int x, int y) {
+        Iterator<Piece> iterator = opponent.getCheckers().iterator();
+        while(iterator.hasNext()){
+            Piece piece = iterator.next();
+            if(piece.getRow()==x && piece.getColumn()==y)
+                return true;
+        }
         return false;
     }
 
 
     public boolean isValidJump(Player opponent, Piece piece, int x, int y) {
 
-
-        return false;
+        int row = piece.getRow();
+        int column = piece.getColumn();
+        Piece piece1 = new Piece(row+2,column-2,piece.isKing());
+        Piece piece2 = new Piece(row+2,column+2,piece.isKing());
+        return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, column -1) &&
+                isEmpty(opponent, row +2, column -2) || isValidJump(opponent,piece1,x,y) ||
+                x==row+2 && y== column+2 && hasPlayers(opponent, row +1, column +1) &&
+                        isEmpty(opponent, row +2, column +2) || isValidJump(opponent,piece2,x,y);
     }
 }

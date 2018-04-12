@@ -9,7 +9,7 @@ public class HeuristicCreater {
     public static int HeuristicFunction(GameBoard game) {
         Player player1 = game.getPlayer1();
         Player player2 = game.getPlayer2();
-        int numberOfTurns = game.getNumberOfTurns();
+        int numberOfTurns = game.getCurrentTurn();
         int player1Kings = player1.getKings().size();
         int player2Kings = player2.getKings().size();
         int player1NormalPieces = player1.getCheckers().size() - player1Kings;
