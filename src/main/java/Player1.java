@@ -89,7 +89,7 @@ public class Player1 implements Player {
     public boolean isValidMove(Player opponent, Piece piece, int x, int y) {
         Set<Piece> opponentCheckers = opponent.getCheckers();
         Piece temp = null;
-        if (x == 0) {
+        if (x == 7) {
             temp = new Piece(x, y, true);
         } else {
             temp = new Piece(x, y, false);
@@ -99,20 +99,25 @@ public class Player1 implements Player {
         }
         int preX = piece.getRow();
         int preY = piece.getColumn();
-        if (!getKings().contains(piece)) {
+        if (getKings().contains(piece)) {
             if (preX != 0 && x == preX - 1) {
                 if (preY == 0) {
                     return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
                 }
-                return y == preY - 1 || y == preY + 1;
-            }
-        } else {
-            if (x == preX + 1) {
-                if (preY == 0) {
-                    return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
+                if (preY == 7) {
+                    return y == 0 || y == preY - 1;
                 }
                 return y == preY - 1 || y == preY + 1;
             }
+        }
+        if (x == preX + 1) {
+            if (preY == 0) {
+                return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
+            }
+            if (preY == 7) {
+                return y == 0 || y == preY - 1;
+            }
+            return y == preY - 1 || y == preY + 1;
         }
         return false;
     }
