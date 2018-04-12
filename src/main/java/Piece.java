@@ -13,4 +13,15 @@ public class Piece {
         this.isKing = true;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public boolean isKing() {
+        return isKing;
+    }
 }

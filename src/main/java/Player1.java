@@ -1,4 +1,6 @@
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Player1 implements Player {
@@ -8,14 +10,14 @@ public class Player1 implements Player {
     private Set<Piece> checkers;
     private Set<Piece> kings;
 
-    Player1(){
+    Player1() {
         this.checkers.addAll(getPlayerPieces());
         this.kings = new HashSet<>();
     }
 
     private Set<Piece> getPlayerPieces() {
         Set<Piece> players = new HashSet<>();
-        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW+3; i++) {
+        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW + 3; i++) {
             int j = i % 2 == 0 ? 1 : 0;
             while (j < NUMBER_OF_COLUMNS) {
                 Piece piece = new Piece(i, j, false);
@@ -40,7 +42,45 @@ public class Player1 implements Player {
     }
 
     public boolean move() {
-        return false;
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter the row number of piece you want to move");
+        int row = s.nextInt();
+        System.out.println("Enter the column number of piece you want to move");
+        int column = s.nextInt();
+
+        System.out.println("Enter the new row number of piece you want to move");
+        int newRow = s.nextInt();
+
+        System.out.println("Enter the new column number of piece you want to move");
+        int newColumn = s.nextInt();
+
+        if(isValidMove(row,column,newRow,newColumn)){
+            Iterator<Piece> iterator = checkers.iterator();
+            while(iterator.hasNext()){
+                Piece peice = iterator.next();
+                if(peice.getRow()==row && peice.getColumn()==column){
+                    checkers.remove(peice);
+                    checkers.add(new Piece(newRow,newColumn,peice.isKing()));
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isValidMove(int row, int column, int newRow, int newColumn) {
+        return newRow==row+1 && (newColumn==column+1 || newColumn==column-1) && noPlayerinCell(newRow,newColumn);
+    }
+
+    private boolean noPlayerinCell(int newRow, int newColumn) {
+        Iterator<Piece> iterator = checkers.iterator();
+        while (iterator.hasNext()) {
+            Piece peice = iterator.next();
+            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
