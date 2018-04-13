@@ -1,16 +1,33 @@
 import java.util.*;
 
+/* This is the human player */
 public class Player2 extends APlayer {
     static final int PLAYER_STARTING_ROW = 5;
-    static final int NUMBER_OF_COLUMNS = 8;
     private Set<Piece> checkers;
 
-    Player2(){
-        super(PLAYER_STARTING_ROW);
+    Player2() {
+        this.checkers = new HashSet<>();
+        this.checkers.addAll(super.getPlayerPieces(PLAYER_STARTING_ROW));
     }
 
     public String getPlayerName() {
         return "Player2";
+    }
+
+    @Override
+    public Set<Piece> getCheckers() {
+        return this.checkers;
+    }
+
+    @Override
+    public Set<Piece> getKings() {
+        Set<Piece> kings = new HashSet<>();
+        for (Piece piece : checkers) {
+            if (piece.isKing()) {
+                kings.add(piece);
+            }
+        }
+        return kings;
     }
 
     public GameBoard move(APlayer opponent) {
@@ -41,15 +58,57 @@ public class Player2 extends APlayer {
         return null;
     }
 
+    @Override
+    protected List<int[]> getAdjacent(int x, int y) {
+        return null;
+    }
+
+    @Override
+    protected boolean isValidMove(APlayer opponent, Piece piece, int x, int y) {
+        return false;
+    }
+
+    @Override
+    public List<GameBoard> getValidJumps(APlayer opponent) {
+        List<GameBoard> gameList = new ArrayList<>();
+        for (Piece piece : this.checkers) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (isValidJump(opponent, piece, i, j)) {
+                        GameBoard game = jump(opponent, piece, i, j);
+                        gameList.add(game);
+                    }
+
+                }
+            }
+        }
+        return gameList;
+    }
+
+    @Override
+    protected boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {
+        return false;
+    }
+
+    @Override
+    protected GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
+        return null;
+    }
+
+    @Override
+    protected GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
+        return null;
+    }
+
     private boolean isValidMove(int row, int column, int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
 
         return
                 // there is no pawn diagonally opposite and the checker can be moved
-                newRow == row - 1 && (newColumn == column + 1 || newColumn == column - 1) && noPlayerinCell(newRow, newColumn) && noOppositionInCell(newRow, newColumn, oppsitionCheckers);
+                newRow == row - 1 && (newColumn == column + 1 || newColumn == column - 1) && noPlayerInCell(newRow, newColumn) && noOppositionInCell(newRow, newColumn, oppsitionCheckers);
 
     }
 
-    private boolean noOppositionInCell(int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
+    public boolean noOppositionInCell(int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
         Iterator<Piece> iterator = oppsitionCheckers.iterator();
         while (iterator.hasNext()) {
             Piece peice = iterator.next();
@@ -60,7 +119,7 @@ public class Player2 extends APlayer {
         return true;
     }
 
-    private boolean noPlayerinCell(int newRow, int newColumn) {
+    public boolean noPlayerInCell(int newRow, int newColumn) {
         Iterator<Piece> iterator = checkers.iterator();
         while (iterator.hasNext()) {
             Piece peice = iterator.next();

@@ -1,5 +1,6 @@
 import java.util.*;
 
+/* This is the AI player */
 public class Player1 extends APlayer {
     static final int PLAYER_STARTING_ROW = 0;
     static final int NUMBER_OF_COLUMNS = 8;
@@ -7,11 +8,28 @@ public class Player1 extends APlayer {
     private Set<Piece> checkers;
 
     Player1(){
-        super(PLAYER_STARTING_ROW);
+        this.checkers = new HashSet<>();
+        this.checkers.addAll(super.getPlayerPieces(PLAYER_STARTING_ROW));
     }
 
     public String getPlayerName() {
         return "Player1";
+    }
+
+    @Override
+    public Set<Piece> getCheckers() {
+        return this.checkers;
+    }
+
+    @Override
+    public Set<Piece> getKings() {
+        Set<Piece> kings = new HashSet<>();
+        for (Piece piece : checkers) {
+            if (piece.isKing()) {
+                kings.add(piece);
+            }
+        }
+        return kings;
     }
 
     public GameBoard move(APlayer opponent) {
@@ -123,6 +141,11 @@ public class Player1 extends APlayer {
         }
 
         return false;
+    }
+
+    @Override
+    public List<GameBoard> getValidJumps(APlayer opponent) {
+        return null;
     }
 
     private boolean isEmpty(Player opponent,int x, int y) {

@@ -3,19 +3,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/* Abstract class for both the players */
 public abstract class APlayer implements Player {
 
     static final int NUMBER_OF_COLUMNS = 8;
 
-    private Set<Piece> checkers;
-    private int playerStartingRow;
-
-    APlayer(int playerStartingRow){
-        this.checkers.addAll(getPlayerPieces());
-        this.playerStartingRow = playerStartingRow;
-    }
-
-    private Set<Piece> getPlayerPieces() {
+    public Set<Piece> getPlayerPieces(int playerStartingRow) {
         Set<Piece> players = new HashSet<>();
         for (int i = playerStartingRow; i < playerStartingRow+3; i++) {
             int j = i % 2 == 0 ? 1 : 0;
@@ -29,20 +22,11 @@ public abstract class APlayer implements Player {
     }
 
     @Override
-    public Set<Piece> getCheckers() {
-        return checkers;
-    }
+    public abstract Set<Piece> getCheckers();
 
     @Override
-    public Set<Piece> getKings() {
-        Set<Piece> kings = new HashSet<>();
-        for(Piece piece : checkers) {
-            if(piece.isKing()) {
-                kings.add(piece);
-            }
-        }
-        return kings;
-    }
+    public abstract Set<Piece> getKings();
+
 
     public abstract GameBoard move(APlayer opponent);
 
@@ -109,21 +93,7 @@ public abstract class APlayer implements Player {
 
     protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
 
-    public List<GameBoard> getValidJumps(APlayer opponent) {
-        List<GameBoard> gameList = new ArrayList<>();
-        for(Piece piece : this.checkers){
-            for(int i=0;i<8;i++){
-                for(int j=0;j<8;j++){
-                    if(isValidJump(opponent,piece,i,j)){
-                        GameBoard game = jump(opponent, piece, i, j);
-                        gameList.add(game);
-                    }
-
-                }
-            }
-        }
-        return gameList;
-    }
+    public abstract List<GameBoard> getValidJumps(APlayer opponent);
 
     protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
 
