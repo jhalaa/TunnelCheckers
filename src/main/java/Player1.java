@@ -99,11 +99,24 @@ public class Player1 implements Player {
     }
 
     public GameBoard makeJump(Player opponent, Piece piece, int x, int y) {
-        return null;
+        if(isValidJump(opponent,piece,x,y)){
+            // kill the oponent
+            // and move to new position
+        }
     }
 
     public List<GameBoard> getValidJumps(Player opponent) {
-        return null;
+        List<GameBoard> gameList = new ArrayList<>();
+        for(Piece piece : this.checkers){
+            for(int i=0;i<8;i++){
+                for(int j=0;j<8;j++){
+                    if(isValidJump(opponent,piece,i,j)){
+
+                    }
+
+                }
+            }
+        }
     }
 
     public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
@@ -179,6 +192,30 @@ public class Player1 implements Player {
         if(piece.isKing() && x < row) {
             Piece piece3 = new Piece(row-2, getColumn(column-2), true);
             Piece piece4 = new Piece(row-2, getColumn(column+2), true);
+            return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
+                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y)
+                    || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
+                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y);
+        }
+        return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
+                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y) ||
+                x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
+                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y);
+    }
+
+    public GameBoard jump(Player opponent, Piece piece, int x, int y) {
+        int row = piece.getRow();
+        int column = piece.getColumn();
+        Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());
+        Piece piece2 = new Piece(row+2,getColumn(column+2),piece.isKing());
+        if(piece.isKing() && x < row) {
+            Piece piece3 = new Piece(row-2, getColumn(column-2), true);
+            Piece piece4 = new Piece(row-2, getColumn(column+2), true);
+            if(x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
+                    isEmpty(opponent, row-2, getColumn(column-2))) {
+                opponent.getCheckers().remove(new Piece(row-1,getColumn(column-1)));
+            }
+
             return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
                     isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y)
                     || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
