@@ -2,8 +2,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GameBoard {
-    private Player player1;
-    private Player player2;
+    private APlayer player1;
+    private APlayer player2;
     //private int numberOfTurns;
     private int currentTurn; //0 or 1 to refer to PLAYER1 or PLAYER2
 
@@ -14,17 +14,17 @@ public class GameBoard {
         currentTurn = 0;
     }
 
-    public GameBoard(Player player1, Player player2, int currentTurn) {
+    public GameBoard(APlayer player1, APlayer player2, int currentTurn) {
         this.player1 = player1;
         this.player2 = player2;
         this.currentTurn = currentTurn;
     }
 
-    public Player getPlayer1() {
+    public APlayer getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    public APlayer getPlayer2() {
         return player2;
     }
 
@@ -37,16 +37,21 @@ public class GameBoard {
         return currentTurn;
     }
 
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
     /**
      *
      * @return the int bigger than 0 means player1 wins, smaller than 0 means player2 wins,
      * and 0 means a draw.
      */
     public int checkWin(){
-        if (!player1.move()) {
+        if (player1.move(this.getPlayer2()) == null) {
             return -1;
         }
-        if (!player2.move()) {
+        if (player2.move(this.getPlayer1()) == null) {
             return 1;
         }
         if (player1.getCheckers().size() == player2.getCheckers().size()) {
@@ -57,17 +62,17 @@ public class GameBoard {
 
     public boolean gameOver() {
         return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
-                || !player1.move() || !player2.move();
+                || player1.move(this.getPlayer2()) == null || player2.move(this.getPlayer1()) == null;
     }
 
     public void play() {
         while(!this.gameOver()){
             if(this.currentTurn == 0) {
-                player1.move();
-                this.currentTurn = 1;
+                player1.move(this.getPlayer2());
+                this.setCurrentTurn(1);
             } else {
-                player2.move();
-                this.currentTurn = 0;
+                player2.move(this.getPlayer1());
+                this.setCurrentTurn(0);
             }
         }
     }

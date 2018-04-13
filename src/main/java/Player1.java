@@ -1,49 +1,20 @@
 import java.util.*;
 
-public class Player1 implements Player {
+public class Player1 extends APlayer {
     static final int PLAYER_STARTING_ROW = 0;
     static final int NUMBER_OF_COLUMNS = 8;
 
     private Set<Piece> checkers;
 
     Player1(){
-        this.checkers.addAll(getPlayerPieces());
+        super(PLAYER_STARTING_ROW);
     }
-
-    private Set<Piece> getPlayerPieces() {
-        Set<Piece> players = new HashSet<>();
-        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW+3; i++) {
-            int j = i % 2 == 0 ? 1 : 0;
-            while (j < NUMBER_OF_COLUMNS) {
-                Piece piece = new Piece(i, j, false);
-                players.add(piece);
-                j += 2;
-            }
-        }
-        return players;
-    }
-
-    @Override
-    public Set<Piece> getKings() {
-        Set<Piece> kings = new HashSet<>();
-        for(Piece piece : checkers) {
-            if(piece.isKing()) {
-                kings.add(piece);
-            }
-        }
-        return kings;
-    }
-
-    public Set<Piece> getCheckers() {
-        return checkers;
-    }
-
 
     public String getPlayerName() {
         return "Player1";
     }
 
-    public GameBoard move(Player opponent) {
+    public GameBoard move(APlayer opponent) {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
 
@@ -85,67 +56,8 @@ public class Player1 implements Player {
         return gameList.get(rand.nextInt(gameList.size()));
     }
 
-    public int minimax(Player opponent, int depth, int alpha, int beta, int currentTurn) {
-        if (depth == 0) {
-            return HeuristicCreater.HeuristicFunction(new GameBoard(this, opponent, currentTurn));
-        }
-        List<GameBoard> gameList = new ArrayList<>();
-        int initial = 0;
-        GameBoard tempBoard = null;
-        if (currentTurn == 0) {
-            gameList = getAllValidMoves(opponent);
-            initial = Integer.MIN_VALUE;
-            for(int i = 0; i < gameList.size(); i++)
-            {
-                tempBoard = gameList.get(i);
 
-                int result = tempBoard.getPlayer2().minimax(tempBoard.getPlayer1(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
-
-                initial = Math.max(result, initial);
-                alpha = Math.max(alpha, initial);
-
-                if(alpha >= beta)
-                    break;
-            }
-        } else {
-            initial = Integer.MAX_VALUE;
-            gameList = opponent.getAllValidMoves(this);
-            for(int i = 0; i < gameList.size(); i++) {
-                tempBoard = gameList.get(i);
-
-                int result = tempBoard.getPlayer1().minimax(tempBoard.getPlayer2(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
-
-                initial = Math.min(result, initial);
-                alpha = Math.min(alpha, initial);
-
-                if (alpha >= beta)
-                    break;
-            }
-        }
-        return initial;
-    }
-
-    @Override
-    public List<GameBoard> getAllValidMoves(Player opponent) {
-        List<GameBoard> res = new ArrayList<>();
-        for (Piece checker : getCheckers()) {
-            int row = checker.getRow();
-            int column = checker.getColumn();
-            List<int[]> adjacent = getAdjacent(row, column);
-            for (int[] array : adjacent) {
-                int x = array[0];
-                int y = array[1];
-                if (isValidMove(opponent, checker, x, y)) {
-                    GameBoard newBoard = makeMove(opponent, checker, x, y);
-                    res.add(newBoard);
-                }
-            }
-        }
-        res.addAll(getValidJumps(opponent));
-        return res;
-    }
-
-    private List<int[]> getAdjacent(int x, int y) {
+    protected List<int[]> getAdjacent(int x, int y) {
         List<int[]> res = new ArrayList<>();
         int[] downleft = new int[2];
         int[] downright = new int[2];
@@ -181,23 +93,7 @@ public class Player1 implements Player {
     }
 
 
-    public List<GameBoard> getValidJumps(Player opponent) {
-        List<GameBoard> gameList = new ArrayList<>();
-        for(Piece piece : this.checkers){
-            for(int i=0;i<8;i++){
-                for(int j=0;j<8;j++){
-                    if(isValidJump(opponent,piece,i,j)){
-                        GameBoard game = jump(opponent, piece, i, j);
-                        gameList.add(game);
-                    }
-
-                }
-            }
-        }
-        return gameList;
-    }
-
-    public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
+    public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
         Piece newPiece = null;
         if (piece.isKing() || x == NUMBER_OF_COLUMNS - 1) {
             newPiece = new Piece(x, y, true);
@@ -209,7 +105,7 @@ public class Player1 implements Player {
         return new GameBoard(this, opponent, 1);
     }
 
-    public boolean isValidMove(Player opponent, Piece piece, int x, int y) {
+    protected boolean isValidMove(APlayer opponent, Piece piece, int x, int y) {
         // without jumps
 
         if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece)) {
@@ -243,16 +139,7 @@ public class Player1 implements Player {
         return false;
     }
 
-    private int getColumn(int columnNum){
-        if(columnNum<0)
-            return 8+columnNum;
-        else if(columnNum>7)
-            return columnNum%8;
-        else
-            return columnNum;
-    }
-
-    public boolean isValidJump(Player opponent, Piece piece, int x, int y) {
+    public boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {
         if(x < 0 || x > 7) {
             return false;
         }
@@ -274,7 +161,7 @@ public class Player1 implements Player {
                         isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y);
     }
 
-    public GameBoard jump(Player opponent, Piece piece, int x, int y) {
+    public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
         int row = piece.getRow();
         int column = piece.getColumn();
         Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());

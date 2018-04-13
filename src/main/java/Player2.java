@@ -1,43 +1,20 @@
 import java.util.*;
 
-public class Player2 implements Player {
+public class Player2 extends APlayer {
     static final int PLAYER_STARTING_ROW = 5;
     static final int NUMBER_OF_COLUMNS = 8;
     private Set<Piece> checkers;
-    private Set<Piece> kings;
 
-    Player2() {
-        this.checkers.addAll(getPlayerPieces());
-        this.kings = new HashSet<>();
-    }
-
-    private Set<Piece> getPlayerPieces() {
-        Set<Piece> players = new HashSet<>();
-        for (int i = PLAYER_STARTING_ROW; i < PLAYER_STARTING_ROW + 3; i++) {
-            int j = i % 2 == 0 ? 1 : 0;
-            while (j < NUMBER_OF_COLUMNS) {
-                Piece piece = new Piece(i, j, false);
-                players.add(piece);
-                j += 2;
-            }
-        }
-        return players;
-    }
-
-    public Set<Piece> getCheckers() {
-        return checkers;
-    }
-
-    @Override
-    public Set<Piece> getKings() {
-        return kings;
+    Player2(){
+        super(PLAYER_STARTING_ROW);
     }
 
     public String getPlayerName() {
         return "Player2";
     }
 
-    public boolean move(Set<Piece> oppsitionCheckers) {
+    public GameBoard move(APlayer opponent) {
+        Set<Piece> oppositionCheckers = opponent.getCheckers();
         Scanner s = new Scanner(System.in);
         System.out.println("Enter the row number of piece you want to move");
         int row = s.nextInt();
@@ -50,18 +27,18 @@ public class Player2 implements Player {
         System.out.println("Enter the new column number of piece you want to move");
         int newColumn = s.nextInt();
 
-        if (isValidMove(row, column, newRow, newColumn, oppsitionCheckers)) {
+        if (isValidMove(row, column, newRow, newColumn, oppositionCheckers)) {
             Iterator<Piece> iterator = checkers.iterator();
             while (iterator.hasNext()) {
                 Piece peice = iterator.next();
                 if (peice.getRow() == row && peice.getColumn() == column) {
                     checkers.remove(peice);
                     checkers.add(new Piece(newRow, newColumn, peice.isKing()));
-                    break;
+                    return new GameBoard(this, opponent, 0);
                 }
             }
         }
-        return true;
+        return null;
     }
 
     private boolean isValidMove(int row, int column, int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
@@ -95,5 +72,3 @@ public class Player2 implements Player {
     }
 
 }
-
-
