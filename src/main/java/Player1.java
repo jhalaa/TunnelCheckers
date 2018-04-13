@@ -58,7 +58,6 @@ public class Player1 implements Player {
                 }
             }
         }
-
         res.addAll(getValidJumps(opponent));
         return res;
     }
@@ -98,12 +97,6 @@ public class Player1 implements Player {
         res.add(up);
     }
 
-    public GameBoard makeJump(Player opponent, Piece piece, int x, int y) {
-        if(isValidJump(opponent,piece,x,y)){
-            // kill the oponent
-            // and move to new position
-        }
-    }
 
     public List<GameBoard> getValidJumps(Player opponent) {
         List<GameBoard> gameList = new ArrayList<>();
@@ -111,18 +104,17 @@ public class Player1 implements Player {
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
                     if(isValidJump(opponent,piece,i,j)){
-
+                        GameBoard game = jump(opponent, piece, i, j);
+                        gameList.add(game);
                     }
 
                 }
             }
         }
+        return gameList;
     }
 
     public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
-        if (!isValidMove(opponent, piece, x, y)) {
-            return new GameBoard(this, opponent, 0);
-        }
         Piece newPiece = null;
         if (getKings().contains(piece) || x == NUMBER_OF_COLUMNS - 1) {
             newPiece = new Piece(x, y, true);
@@ -151,9 +143,6 @@ public class Player1 implements Player {
         if (x == preX + 1) {
             return y == getColumn(preY - 1) || y == getColumn(preY + 1);
         }
-
-        //with jumps
-        isValidJump(opponent,piece,x,y);
 
         return false;
     }
@@ -214,16 +203,30 @@ public class Player1 implements Player {
             if(x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
                     isEmpty(opponent, row-2, getColumn(column-2))) {
                 opponent.getCheckers().remove(new Piece(row-1,getColumn(column-1)));
+                this.getCheckers().remove(piece);
+                this.getCheckers().add(piece3);
+                return jump(opponent, piece3, x, y);
             }
-
-            return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
-                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y)
-                    || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
-                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y);
+            if (x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
+                    isEmpty(opponent, row-2, getColumn(column+2))) {
+                opponent.getCheckers().remove(new Piece(row-1, getColumn(column+1)));
+                this.getCheckers().remove(piece);
+                this.getCheckers().add(piece4);
+                return jump(opponent, piece4, x, y);
+            }
+        } else if (x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
+                isEmpty(opponent, row +2, getColumn(column -2))) {
+            opponent.getCheckers().remove(new Piece(row+1, getColumn(column-1)));
+            this.getCheckers().remove(piece);
+            this.getCheckers().add(piece1);
+            return jump(opponent, piece1, x, y);
+        } else if (x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
+                isEmpty(opponent, row +2, getColumn(column +2))) {
+            opponent.getCheckers().remove(new Piece(row+1, getColumn(column+1)));
+            this.getCheckers().remove(piece);
+            this.getCheckers().add(piece2);
+            return jump(opponent, piece2, x, y);
         }
-        return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
-                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y) ||
-                x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
-                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y);
+        return new GameBoard(this, opponent, 1);
     }
 }
