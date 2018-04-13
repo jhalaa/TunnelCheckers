@@ -5,11 +5,9 @@ public class Player1 implements Player {
     static final int NUMBER_OF_COLUMNS = 8;
 
     private Set<Piece> checkers;
-    private Set<Piece> kings;
 
     Player1(){
         this.checkers.addAll(getPlayerPieces());
-        this.kings = new HashSet<>();
     }
 
     private Set<Piece> getPlayerPieces() {
@@ -25,24 +23,109 @@ public class Player1 implements Player {
         return players;
     }
 
+    @Override
+    public Set<Piece> getKings() {
+        Set<Piece> kings = new HashSet<>();
+        for(Piece piece : checkers) {
+            if(piece.isKing()) {
+                kings.add(piece);
+            }
+        }
+        return kings;
+    }
+
     public Set<Piece> getCheckers() {
         return checkers;
     }
 
-    @Override
-    public Set<Piece> getKings() {
-        return kings;
-    }
 
     public String getPlayerName() {
         return "Player1";
     }
 
-    public boolean move(Player opponent) {
-        return false;
+    public GameBoard move(Player opponent) {
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
+
+        List<GameBoard> gameList = getAllValidMoves(opponent);
+
+        List<Integer> heuristics = new ArrayList<>();
+        if(gameList.isEmpty())
+            return null;
+        GameBoard tempBoard = null;
+
+        //initialize the depth to search
+        int depth = 4;
+
+        for(int i = 0; i < gameList.size(); i++) {
+            tempBoard = gameList.get(i);
+
+            heuristics.add(tempBoard.getPlayer2().minimax(tempBoard.getPlayer1(), depth - 1, alpha, beta, tempBoard.getCurrentTurn()));
+        }
+
+        int maxHeuristics = Integer.MIN_VALUE;
+
+        for(int i = heuristics.size() - 1; i >= 0; i--) {
+            if (heuristics.get(i) >= maxHeuristics) {
+                maxHeuristics = heuristics.get(i);
+            }
+        }
+
+        for(int i = 0; i < heuristics.size(); i++) {
+            if(heuristics.get(i) < maxHeuristics) {
+                heuristics.remove(i);
+                gameList.remove(i);
+                if (i != 0) {
+                    i--;
+                }
+            }
+        }
+
+        Random rand = new Random();
+        return gameList.get(rand.nextInt(gameList.size()));
     }
 
+    public int minimax(Player opponent, int depth, int alpha, int beta, int currentTurn) {
+        if (depth == 0) {
+            return HeuristicCreater.HeuristicFunction(new GameBoard(this, opponent, currentTurn));
+        }
+        List<GameBoard> gameList = new ArrayList<>();
+        int initial = 0;
+        GameBoard tempBoard = null;
+        if (currentTurn == 0) {
+            gameList = getAllValidMoves(opponent);
+            initial = Integer.MIN_VALUE;
+            for(int i = 0; i < gameList.size(); i++)
+            {
+                tempBoard = gameList.get(i);
 
+                int result = tempBoard.getPlayer2().minimax(tempBoard.getPlayer1(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
+
+                initial = Math.max(result, initial);
+                alpha = Math.max(alpha, initial);
+
+                if(alpha >= beta)
+                    break;
+            }
+        } else {
+            initial = Integer.MAX_VALUE;
+            gameList = opponent.getAllValidMoves(this);
+            for(int i = 0; i < gameList.size(); i++) {
+                tempBoard = gameList.get(i);
+
+                int result = tempBoard.getPlayer1().minimax(tempBoard.getPlayer2(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
+
+                initial = Math.min(result, initial);
+                alpha = Math.min(alpha, initial);
+
+                if (alpha >= beta)
+                    break;
+            }
+        }
+        return initial;
+    }
+
+    @Override
     public List<GameBoard> getAllValidMoves(Player opponent) {
         List<GameBoard> res = new ArrayList<>();
         for (Piece checker : getCheckers()) {
@@ -52,7 +135,7 @@ public class Player1 implements Player {
             for (int[] array : adjacent) {
                 int x = array[0];
                 int y = array[1];
-                if(isValidMove(opponent, checker, x, y)) {
+                if (isValidMove(opponent, checker, x, y)) {
                     GameBoard newBoard = makeMove(opponent, checker, x, y);
                     res.add(newBoard);
                 }
@@ -116,12 +199,11 @@ public class Player1 implements Player {
 
     public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
         Piece newPiece = null;
-        if (getKings().contains(piece) || x == NUMBER_OF_COLUMNS - 1) {
+        if (piece.isKing() || x == NUMBER_OF_COLUMNS - 1) {
             newPiece = new Piece(x, y, true);
-            getKings().remove(piece);
-            getKings().add(newPiece);
+        } else {
+            newPiece = new Piece(x, y, false);
         }
-        newPiece = new Piece(x, y, false);
         getCheckers().remove(piece);
         getCheckers().add(newPiece);
         return new GameBoard(this, opponent, 1);
@@ -135,7 +217,7 @@ public class Player1 implements Player {
         }
         int preX = piece.getRow();
         int preY = piece.getColumn();
-        if (getKings().contains(piece)) {
+        if (piece.isKing()) {
             if (preX != 0 && x == preX - 1) {
                 return y == getColumn(preY - 1) || y == getColumn(preY + 1);
             }
@@ -218,12 +300,18 @@ public class Player1 implements Player {
                 isEmpty(opponent, row +2, getColumn(column -2))) {
             opponent.getCheckers().remove(new Piece(row+1, getColumn(column-1)));
             this.getCheckers().remove(piece);
+            if (x == 7) {
+                piece1.setKing(true);
+            }
             this.getCheckers().add(piece1);
             return jump(opponent, piece1, x, y);
         } else if (x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
                 isEmpty(opponent, row +2, getColumn(column +2))) {
             opponent.getCheckers().remove(new Piece(row+1, getColumn(column+1)));
             this.getCheckers().remove(piece);
+            if (x == 7) {
+                piece2.setKing(true);
+            }
             this.getCheckers().add(piece2);
             return jump(opponent, piece2, x, y);
         }

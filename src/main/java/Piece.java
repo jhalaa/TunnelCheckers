@@ -30,6 +30,17 @@ public class Piece {
         return isKing;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public void setKing(boolean king) {
+        isKing = king;
+    }
 
     @Override
     public boolean equals(Object o) {
