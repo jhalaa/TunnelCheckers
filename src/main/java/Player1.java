@@ -38,33 +38,72 @@ public class Player1 implements Player {
         return "Player1";
     }
 
-    public boolean move() {
+    public boolean move(Player opponent) {
         return false;
     }
+
 
     public List<GameBoard> getAllValidMoves(Player opponent) {
         List<GameBoard> res = new ArrayList<>();
         for (Piece checker : getCheckers()) {
-
+            int row = checker.getRow();
+            int column = checker.getColumn();
+            List<int[]> adjacent = getAdjacent(row, column);
+            for (int[] array : adjacent) {
+                int x = array[0];
+                int y = array[1];
+                if(isValidMove(opponent, checker, x, y)) {
+                    GameBoard newBoard = makeMove(opponent, checker, x, y);
+                    res.add(newBoard);
+                }
+            }
         }
 
         res.addAll(getValidJumps(opponent));
         return res;
     }
 
-    private int[][] getAdjacent(int x, int y) {
-        int[][] res = new int[4][2];
-
-
+    private List<int[]> getAdjacent(int x, int y) {
+        List<int[]> res = new ArrayList<>();
+        int[] downleft = new int[2];
+        int[] downright = new int[2];
+        int[] upleft = new int[2];
+        int[] upright = new int[2];
+        if (x == 0) {
+            getDown(x, res, downleft, y - 1);
+            getDown(x, res, downright, y + 1);
+            return res;
+        }
+        if (x == 7) {
+            getUp(x, res, upleft, y - 1);
+            getUp(x, res, upright, y + 1);
+            return res;
+        }
+        getDown(x, res, downleft, y - 1);
+        getDown(x, res, downright, y + 1);
+        getUp(x, res, upleft, y - 1);
+        getUp(x, res, upright, y + 1);
         return res;
     }
 
-    public GameBoard makeJump(Player opponent, Piece piece, int x, int y) {
+    private void getDown(int x, List<int[]> res, int[] down, int columnNum) {
+        down[0] = x + 1;
+        down[1] = getColumn(columnNum);
+        res.add(down);
+    }
 
+    private void getUp(int x, List<int[]> res, int[] up, int columnNum) {
+        up[0] = x - 1;
+        up[1] = getColumn(columnNum);
+        res.add(up);
+    }
+
+    public GameBoard makeJump(Player opponent, Piece piece, int x, int y) {
+        return null;
     }
 
     public List<GameBoard> getValidJumps(Player opponent) {
-
+        return null;
     }
 
     public GameBoard makeMove(Player opponent, Piece piece, int x, int y) {
@@ -85,37 +124,19 @@ public class Player1 implements Player {
 
     public boolean isValidMove(Player opponent, Piece piece, int x, int y) {
         // without jumps
-        Set<Piece> opponentCheckers = opponent.getCheckers();
-        Piece temp = null;
-        if (x == 7) {
-            temp = new Piece(x, y, true);
-        } else {
-            temp = new Piece(x, y, false);
-        }
-        if (opponentCheckers.contains(temp) || !getCheckers().contains(piece)) {
+
+        if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece)) {
             return false;
         }
         int preX = piece.getRow();
         int preY = piece.getColumn();
         if (getKings().contains(piece)) {
             if (preX != 0 && x == preX - 1) {
-                if (preY == 0) {
-                    return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
-                }
-                if (preY == 7) {
-                    return y == 0 || y == preY - 1;
-                }
-                return y == preY - 1 || y == preY + 1;
+                return y == getColumn(preY - 1) || y == getColumn(preY + 1);
             }
         }
         if (x == preX + 1) {
-            if (preY == 0) {
-                return y == NUMBER_OF_COLUMNS - 1 || y == preY + 1;
-            }
-            if (preY == 7) {
-                return y == 0 || y == preY - 1;
-            }
-            return y == preY - 1 || y == preY + 1;
+            return y == getColumn(preY - 1) || y == getColumn(preY + 1);
         }
 
         //with jumps
