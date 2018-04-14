@@ -4,11 +4,20 @@ import java.util.List;
 import java.util.Set;
 
 /* Abstract class for both the players */
-public abstract class APlayer implements Player {
+public abstract class APlayer {
 
-    static final int NUMBER_OF_COLUMNS = 8;
+    private static final int NUMBER_OF_COLUMNS = 8;
+    public abstract Set<Piece> getCheckers();
 
-    public Set<Piece> getPlayerPieces(int playerStartingRow) {
+    public abstract GameBoard move(APlayer opponent);
+    protected abstract List<int[]> getAdjacent(int x, int y);
+    protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
+    public abstract List<GameBoard> getValidJumps(APlayer opponent);
+    protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
+    protected abstract GameBoard makeMove(APlayer opponent, Piece piece, int x, int y);
+    protected abstract GameBoard jump(APlayer opponent, Piece piece, int x, int y);
+
+    Set<Piece> getPlayerPieces(int playerStartingRow) {
         Set<Piece> players = new HashSet<>();
         for (int i = playerStartingRow; i < playerStartingRow+3; i++) {
             int j = i % 2 == 0 ? 1 : 0;
@@ -21,42 +30,32 @@ public abstract class APlayer implements Player {
         return players;
     }
 
-    @Override
-    public abstract Set<Piece> getCheckers();
-
-    @Override
-    public abstract Set<Piece> getKings();
-
-
-    public abstract GameBoard move(APlayer opponent);
-
-    public int minimax(APlayer opponent, int depth, int alpha, int beta, int currentTurn) {
+    int minimax(APlayer opponent, int depth, int alpha, int beta, int currentTurn) {
         if (depth == 0) {
             return HeuristicCreater.HeuristicFunction(new GameBoard(this, opponent, currentTurn));
         }
-        List<GameBoard> gameList = new ArrayList<>();
-        int initial = 0;
-        GameBoard tempBoard = null;
+        List<GameBoard> gameList;
+        int initial;
+        GameBoard tempBoard;
         if (currentTurn == 0) {
             gameList = getAllValidMoves(opponent);
             initial = Integer.MIN_VALUE;
-            for(int i = 0; i < gameList.size(); i++)
-            {
-                tempBoard = gameList.get(i);
+            for (GameBoard aGameList : gameList) {
+                tempBoard = aGameList;
 
                 int result = tempBoard.getPlayer2().minimax(tempBoard.getPlayer1(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
 
                 initial = Math.max(result, initial);
                 alpha = Math.max(alpha, initial);
 
-                if(alpha >= beta)
+                if (alpha >= beta)
                     break;
             }
         } else {
             initial = Integer.MAX_VALUE;
             gameList = opponent.getAllValidMoves(this);
-            for(int i = 0; i < gameList.size(); i++) {
-                tempBoard = gameList.get(i);
+            for (GameBoard aGameList : gameList) {
+                tempBoard = aGameList;
 
                 int result = tempBoard.getPlayer1().minimax(tempBoard.getPlayer2(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
 
@@ -70,7 +69,7 @@ public abstract class APlayer implements Player {
         return initial;
     }
 
-    public List<GameBoard> getAllValidMoves(APlayer opponent) {
+    List<GameBoard> getAllValidMoves(APlayer opponent) {
         List<GameBoard> res = new ArrayList<>();
         for (Piece checker : getCheckers()) {
             int row = checker.getRow();
@@ -89,18 +88,6 @@ public abstract class APlayer implements Player {
         return res;
     }
 
-    protected abstract List<int[]> getAdjacent(int x, int y);
-
-    protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
-
-    public abstract List<GameBoard> getValidJumps(APlayer opponent);
-
-    protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
-
-    protected abstract GameBoard makeMove(APlayer opponent, Piece piece, int x, int y);
-
-    protected abstract GameBoard jump(APlayer opponent, Piece piece, int x, int y);
-
     public int getColumn(int columnNum){
         if(columnNum<0)
             return 8+columnNum;
@@ -108,5 +95,15 @@ public abstract class APlayer implements Player {
             return columnNum%8;
         else
             return columnNum;
+    }
+
+    public Set<Piece> getKings(Set<Piece> checkers) {
+        Set<Piece> kings = new HashSet<>();
+        for (Piece piece : checkers) {
+            if (piece.isKing()) {
+                kings.add(piece);
+            }
+        }
+        return kings;
     }
 }

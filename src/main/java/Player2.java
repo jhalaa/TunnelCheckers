@@ -2,7 +2,7 @@ import java.util.*;
 
 /* This is the human player */
 public class Player2 extends APlayer {
-    static final int PLAYER_STARTING_ROW = 5;
+    private static final int PLAYER_STARTING_ROW = 5;
     private Set<Piece> checkers;
 
     Player2() {
@@ -10,24 +10,12 @@ public class Player2 extends APlayer {
         this.checkers.addAll(super.getPlayerPieces(PLAYER_STARTING_ROW));
     }
 
-    public String getPlayerName() {
-        return "Player2";
-    }
-
-    @Override
     public Set<Piece> getCheckers() {
         return this.checkers;
     }
 
-    @Override
     public Set<Piece> getKings() {
-        Set<Piece> kings = new HashSet<>();
-        for (Piece piece : checkers) {
-            if (piece.isKing()) {
-                kings.add(piece);
-            }
-        }
-        return kings;
+        return super.getKings(this.checkers);
     }
 
     public GameBoard move(APlayer opponent) {
@@ -54,6 +42,10 @@ public class Player2 extends APlayer {
                     return new GameBoard(this, opponent, 0);
                 }
             }
+        }
+        else{
+            System.out.println("Not a valid move!Please play again");
+            return this.move(opponent);
         }
         return null;
     }

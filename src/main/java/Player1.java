@@ -2,8 +2,8 @@ import java.util.*;
 
 /* This is the AI player */
 public class Player1 extends APlayer {
-    static final int PLAYER_STARTING_ROW = 0;
-    static final int NUMBER_OF_COLUMNS = 8;
+    private static final int PLAYER_STARTING_ROW = 0;
+    private static final int NUMBER_OF_COLUMNS = 8;
 
     private Set<Piece> checkers;
 
@@ -12,24 +12,12 @@ public class Player1 extends APlayer {
         this.checkers.addAll(super.getPlayerPieces(PLAYER_STARTING_ROW));
     }
 
-    public String getPlayerName() {
-        return "Player1";
-    }
-
-    @Override
     public Set<Piece> getCheckers() {
         return this.checkers;
     }
 
-    @Override
     public Set<Piece> getKings() {
-        Set<Piece> kings = new HashSet<>();
-        for (Piece piece : checkers) {
-            if (piece.isKing()) {
-                kings.add(piece);
-            }
-        }
-        return kings;
+        return super.getKings(this.checkers);
     }
 
     public GameBoard move(APlayer opponent) {
@@ -41,7 +29,7 @@ public class Player1 extends APlayer {
         List<Integer> heuristics = new ArrayList<>();
         if(gameList.isEmpty())
             return null;
-        GameBoard tempBoard = null;
+        GameBoard tempBoard;
 
         //initialize the depth to search
         int depth = 4;
@@ -148,11 +136,11 @@ public class Player1 extends APlayer {
         return null;
     }
 
-    private boolean isEmpty(Player opponent,int x, int y) {
+    private boolean isEmpty(APlayer opponent,int x, int y) {
         return !hasPlayers(opponent,x,y) && !hasPlayers(this,x,y);
     }
 
-    private boolean hasPlayers(Player opponent, int x, int y) {
+    private boolean hasPlayers(APlayer opponent, int x, int y) {
         Iterator<Piece> iterator = opponent.getCheckers().iterator();
         while(iterator.hasNext()){
             Piece piece = iterator.next();
