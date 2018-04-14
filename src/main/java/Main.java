@@ -1,13 +1,15 @@
 class Main {
 
-    public static GameBoard gameBoard = new GameBoard();
+
 
     public static void main(String[] args) {
         System.out.println("Hello and welcome to tunnel checkers!!");
+        GameBoard gameBoard = new GameBoard();
         gameBoard.printBoard();
 
         while (!gameBoard.gameOver()) {
             if (gameBoard.getCurrentTurn() == 0) {
+                System.out.println("AI is playing...");
                 gameBoard= gameBoard.getPlayer1().move(gameBoard.getPlayer2());
                 gameBoard.printBoard();
             } else {

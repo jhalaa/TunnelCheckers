@@ -58,8 +58,8 @@ public class GameBoard {
     }
 
     public boolean gameOver() {
-        return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
-                || player1.getAllValidMoves(this.getPlayer2()).size() == 0 || player2.getAllValidMoves(this.getPlayer2()).size() == 0;
+        return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0;
+//                || player1.getAllValidMoves(this.getPlayer2()).size() == 0 || player2.getAllValidMoves(this.getPlayer2()).size() == 0;
     }
 
     public void printBoard() {

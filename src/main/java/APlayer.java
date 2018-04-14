@@ -28,11 +28,11 @@ public abstract class APlayer {
         if (depth == 0) {
             return HeuristicCreater.HeuristicFunction(new GameBoard(this, opponent, currentTurn));
         }
-        List<GameBoard> gameList;
+        List<GameBoard> gameList = getAllValidMoves(opponent);
         int initial;
         GameBoard tempBoard;
         if (currentTurn == 0) {
-            gameList = getAllValidMoves(opponent);
+            //gameList = getAllValidMoves(opponent);
             initial = Integer.MIN_VALUE;
             for (GameBoard aGameList : gameList) {
                 tempBoard = aGameList;
@@ -47,14 +47,14 @@ public abstract class APlayer {
             }
         } else {
             initial = Integer.MAX_VALUE;
-            gameList = opponent.getAllValidMoves(this);
+            //gameList = opponent.getAllValidMoves(this);
             for (GameBoard aGameList : gameList) {
                 tempBoard = aGameList;
 
                 int result = tempBoard.getPlayer1().minimax(tempBoard.getPlayer2(), depth - 1, alpha, beta, tempBoard.getCurrentTurn());
 
                 initial = Math.min(result, initial);
-                alpha = Math.min(alpha, initial);
+                beta = Math.min(beta, initial);
 
                 if (alpha >= beta)
                     break;

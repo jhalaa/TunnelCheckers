@@ -39,7 +39,7 @@ public class Player2 extends APlayer {
                 if (peice.getRow() == row && peice.getColumn() == column) {
                     checkers.remove(peice);
                     checkers.add(new Piece(newRow, newColumn, peice.isKing()));
-                    return new GameBoard(this, opponent, 0);
+                    return new GameBoard(opponent, this, 0);
                 }
             }
         } else {
@@ -73,7 +73,11 @@ public class Player2 extends APlayer {
     }
 
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
-        GameBoard newBoard = new GameBoard(opponent, this, 1);
+        GameBoard newBoard = new GameBoard();
+        newBoard.getPlayer2().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().clear();
+        newBoard.getPlayer2().getCheckers().addAll(this.getCheckers());
+        newBoard.getPlayer1().getCheckers().addAll(opponent.getCheckers());
         Piece newPiece = null;
         if (piece.isKing() || x == 0) {
             newPiece = new Piece(x, y, true);
@@ -87,7 +91,13 @@ public class Player2 extends APlayer {
     }
 
     public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
-        GameBoard newBoard = new GameBoard(opponent, this, 0);
+        //GameBoard newBoard = new GameBoard(opponent, this, 0);
+        GameBoard newBoard = new GameBoard();
+        newBoard.getPlayer2().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().clear();
+        newBoard.getPlayer2().getCheckers().addAll(this.getCheckers());
+        newBoard.getPlayer1().getCheckers().addAll(opponent.getCheckers());
+        newBoard.setCurrentTurn(0);
         int row = piece.getRow();
         int column = piece.getColumn();
         Piece piece1 = new Piece(row - 2, getColumn(column - 2), piece.isKing());
@@ -134,7 +144,7 @@ public class Player2 extends APlayer {
 
     protected boolean isValidMove(APlayer opponent, Piece piece, int x, int y) {
         // there is no pawn diagonally opposite and the checker can be moved
-        if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece)) {
+        if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece) || hasPlayers(this, x, y)) {
             return false;
         }
         int preX = piece.getRow();

@@ -59,11 +59,17 @@ public class Player1 extends APlayer {
         }
 
         Random rand = new Random();
-        return gameList.get(rand.nextInt(gameList.size()));
+        int k = rand.nextInt(gameList.size());
+        GameBoard board = gameList.get(k);
+        return board;
     }
 
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
-        GameBoard newBoard = new GameBoard(this, opponent, 0);
+        GameBoard newBoard = new GameBoard();
+        newBoard.getPlayer2().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().addAll(this.getCheckers());
+        newBoard.getPlayer2().getCheckers().addAll(opponent.getCheckers());
         Piece newPiece = null;
         if (piece.isKing() || x == NUMBER_OF_COLUMNS - 1) {
             newPiece = new Piece(x, y, true);
@@ -79,7 +85,7 @@ public class Player1 extends APlayer {
     protected boolean isValidMove(APlayer opponent, Piece piece, int x, int y) {
         // without jumps
 
-        if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece)) {
+        if (hasPlayers(opponent, x, y) || !getCheckers().contains(piece) || hasPlayers(this, x, y)) {
             return false;
         }
         int preX = piece.getRow();
@@ -119,7 +125,13 @@ public class Player1 extends APlayer {
     }
 
     public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
-        GameBoard newBoard = new GameBoard(this,opponent, 1);
+        //GameBoard newBoard = new GameBoard(this,opponent, 1);
+        GameBoard newBoard = new GameBoard();
+        newBoard.getPlayer2().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().clear();
+        newBoard.getPlayer1().getCheckers().addAll(this.getCheckers());
+        newBoard.getPlayer2().getCheckers().addAll(opponent.getCheckers());
+        newBoard.setCurrentTurn(1);
         int row = piece.getRow();
         int column = piece.getColumn();
         Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());
