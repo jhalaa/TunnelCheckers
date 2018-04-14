@@ -91,7 +91,7 @@ public abstract class APlayer {
         for (Piece piece : temp) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    if (isValidJump(opponent, piece, i, j,4)) {
+                    if (isValidJump(opponent, piece, i, j,2)) {
                         GameBoard game = jump(opponent, piece, i, j);
                         gameList.add(game);
                     }
@@ -168,6 +168,15 @@ public abstract class APlayer {
 
     public boolean isEmpty(APlayer opponent,int x, int y) {
         return !hasPlayers(opponent,x,y) && !hasPlayers(this,x,y);
+    }
+
+    public Piece getChecker(int x, int y) {
+        for (Piece checker : this.getCheckers()) {
+            if(checker.equals(new Piece(x, y))) {
+                return checker;
+            }
+        }
+        return null;
     }
 
 }

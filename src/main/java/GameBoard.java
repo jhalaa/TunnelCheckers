@@ -1,11 +1,13 @@
 public class GameBoard {
     private APlayer player1;
     private APlayer player2;
+    //private int numberOfTurns;
     private int currentTurn; //0 or 1 to refer to PLAYER1 or PLAYER2
 
     public GameBoard(){
         player1 = new Player1();
         player2 = new Player2();
+        //numberOfTurns = 0;
         currentTurn = 0;
     }
 
@@ -23,8 +25,18 @@ public class GameBoard {
         return player2;
     }
 
+//    public int getNumberOfTurns() {
+//        return numberOfTurns;
+//    }
+
+
     public int getCurrentTurn() {
         return currentTurn;
+    }
+
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
     }
 
     /**
@@ -48,5 +60,30 @@ public class GameBoard {
     public boolean gameOver() {
         return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
                 || player1.getAllValidMoves(this.getPlayer2()).size() == 0 || player2.getAllValidMoves(this.getPlayer2()).size() == 0;
+    }
+
+    public void printBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(player1.getCheckers().contains(new Piece(i, j))) {
+                    Piece temp = player1.getChecker(i, j);
+                    if (temp.isKing()) {
+                        System.out.print("1K");
+                    } else {
+                        System.out.print("1");
+                    }
+                } else if(player2.getCheckers().contains(new Piece(i, j))) {
+                    Piece temp = player2.getChecker(i, j);
+                    if (temp.isKing()) {
+                        System.out.print("2K");
+                    } else {
+                        System.out.print("2");
+                    }
+                } else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println("");
+        }
     }
 }

@@ -63,15 +63,17 @@ public class Player1 extends APlayer {
     }
 
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
+        GameBoard newBoard = new GameBoard(this, opponent, 0);
         Piece newPiece = null;
         if (piece.isKing() || x == NUMBER_OF_COLUMNS - 1) {
             newPiece = new Piece(x, y, true);
         } else {
             newPiece = new Piece(x, y, false);
         }
-        getCheckers().remove(piece);
-        getCheckers().add(newPiece);
-        return new GameBoard(this, opponent, 1);
+        newBoard.getPlayer1().getCheckers().remove(piece);
+        newBoard.getPlayer1().getCheckers().add(newPiece);
+        newBoard.setCurrentTurn(1);
+        return newBoard;
     }
 
     protected boolean isValidMove(APlayer opponent, Piece piece, int x, int y) {
@@ -117,6 +119,7 @@ public class Player1 extends APlayer {
     }
 
     public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
+        GameBoard newBoard = new GameBoard(this,opponent, 1);
         int row = piece.getRow();
         int column = piece.getColumn();
         Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());
@@ -126,37 +129,37 @@ public class Player1 extends APlayer {
             Piece piece4 = new Piece(row-2, getColumn(column+2), true);
             if(x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
                     isEmpty(opponent, row-2, getColumn(column-2))) {
-                opponent.getCheckers().remove(new Piece(row-1,getColumn(column-1)));
-                this.getCheckers().remove(piece);
-                this.getCheckers().add(piece3);
-                return jump(opponent, piece3, x, y);
+                newBoard.getPlayer2().getCheckers().remove(new Piece(row-1,getColumn(column-1)));
+                newBoard.getPlayer1().getCheckers().remove(piece);
+                newBoard.getPlayer1().getCheckers().add(piece3);
+                return jump(newBoard.getPlayer2(), piece3, x, y);
             }
             if (x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
                     isEmpty(opponent, row-2, getColumn(column+2))) {
-                opponent.getCheckers().remove(new Piece(row-1, getColumn(column+1)));
-                this.getCheckers().remove(piece);
-                this.getCheckers().add(piece4);
-                return jump(opponent, piece4, x, y);
+                newBoard.getPlayer2().getCheckers().remove(new Piece(row-1, getColumn(column+1)));
+                newBoard.getPlayer1().getCheckers().remove(piece);
+                newBoard.getPlayer1().getCheckers().add(piece4);
+                return jump(newBoard.getPlayer2(), piece4, x, y);
             }
         } else if (x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
                 isEmpty(opponent, row +2, getColumn(column -2))) {
-            opponent.getCheckers().remove(new Piece(row+1, getColumn(column-1)));
-            this.getCheckers().remove(piece);
+            newBoard.getPlayer2().getCheckers().remove(new Piece(row+1, getColumn(column-1)));
+            newBoard.getPlayer1().getCheckers().remove(piece);
             if (x == 7) {
                 piece1.setKing(true);
             }
-            this.getCheckers().add(piece1);
-            return jump(opponent, piece1, x, y);
+            newBoard.getPlayer1().getCheckers().add(piece1);
+            return jump(newBoard.getPlayer2(), piece1, x, y);
         } else if (x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
                 isEmpty(opponent, row +2, getColumn(column +2))) {
-            opponent.getCheckers().remove(new Piece(row+1, getColumn(column+1)));
-            this.getCheckers().remove(piece);
+            newBoard.getPlayer2().getCheckers().remove(new Piece(row+1, getColumn(column+1)));
+            newBoard.getPlayer1().getCheckers().remove(piece);
             if (x == 7) {
                 piece2.setKing(true);
             }
-            this.getCheckers().add(piece2);
-            return jump(opponent, piece2, x, y);
+            newBoard.getPlayer1().getCheckers().add(piece2);
+            return jump(newBoard.getPlayer2(), piece2, x, y);
         }
-        return new GameBoard(this, opponent, 1);
+        return newBoard;
     }
 }
