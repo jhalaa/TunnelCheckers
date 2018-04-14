@@ -63,6 +63,7 @@ public class GameBoard {
     }
 
     public void printBoard() {
+        System.out.println("-------------------------");
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(player1.getCheckers().contains(new Piece(i, j))) {
@@ -70,21 +71,23 @@ public class GameBoard {
                     if (temp.isKing()) {
                         System.out.print("|1K");
                     } else {
-                        System.out.print("|⚫");
+                        System.out.print("|⬤");
                     }
                 } else if(player2.getCheckers().contains(new Piece(i, j))) {
                     Piece temp = player2.getChecker(i, j);
                     if (temp.isKing()) {
                         System.out.print("|2K");
                     } else {
-                        System.out.print("|⚪");
+                        System.out.print("|  ⃝");
                     }
                 } else {
                     System.out.print("|  ");
                 }
             }
+            System.out.print("|");
             System.out.println("");
         }
+        System.out.println("-------------------------");
         System.out.println("");
         System.out.println("");
     }
