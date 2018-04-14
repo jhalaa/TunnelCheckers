@@ -161,26 +161,4 @@ public class Player2 extends APlayer {
         return false;
     }
 
-    public boolean noOppositionInCell(int newRow, int newColumn, Set<Piece> oppsitionCheckers) {
-        Iterator<Piece> iterator = oppsitionCheckers.iterator();
-        while (iterator.hasNext()) {
-            Piece peice = iterator.next();
-            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean noPlayerInCell(int newRow, int newColumn) {
-        Iterator<Piece> iterator = checkers.iterator();
-        while (iterator.hasNext()) {
-            Piece peice = iterator.next();
-            if (peice.getRow() == newRow && peice.getColumn() == newColumn) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

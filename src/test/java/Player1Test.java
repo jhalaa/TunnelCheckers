@@ -36,22 +36,4 @@ public class Player1Test {
 
     }
 
-//    @Test
-//    public void shouldCheckIfNoneOfItsPlayersAreInACell() {
-//         assertEquals(this.player.noPlayerInCell(3,0),true);
-//         assertEquals(this.player.noPlayerInCell(4,3),true);
-//         assertEquals(this.player.noPlayerInCell(5,1),true);
-//         assertEquals(this.player.noPlayerInCell(5,0),false);
-//
-//    }
-//
-//    @Test
-//    public void shouldCheckIfNoneOfOppositionPlayersAreInACell() {
-//        Set<Piece> oppsitionCheckers = new Player1().getCheckers();
-//         assertEquals(this.player.noOppositionInCell(3,0, oppsitionCheckers),true);
-//         assertEquals(this.player.noOppositionInCell(4,3, oppsitionCheckers),true);
-//         assertEquals(this.player.noOppositionInCell(0,0, oppsitionCheckers),true);
-//         assertEquals(this.player.noOppositionInCell(0,1, oppsitionCheckers),false);
-//
-//    }
 }
