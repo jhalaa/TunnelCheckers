@@ -1,9 +1,10 @@
 class Main {
 
+    public static GameBoard gameBoard = new GameBoard();
+
     public static void main(String[] args) {
         System.out.println("Hello and welcome to tunnel checkers!!");
 
-        GameBoard gameBoard = new GameBoard();
         gameBoard.play();
 
 

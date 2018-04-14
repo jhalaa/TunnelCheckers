@@ -1,6 +1,3 @@
-import java.util.HashSet;
-import java.util.Set;
-
 public class GameBoard {
     private APlayer player1;
     private APlayer player2;
