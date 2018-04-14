@@ -1,12 +1,13 @@
-import org.junit.Assert;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.*;
 
 public class HeuristicCreaterTest {
 
     @Test
     public void shouldReturnTheValueOfAHeuristicGivenAGameBoard() {
         GameBoard gameBoard = new GameBoard();
-        Assert.assertEquals(HeuristicCreater.HeuristicFunction(gameBoard), 0);
+        assertEquals(HeuristicCreater.HeuristicFunction(gameBoard), 0);
 
     }
 }
