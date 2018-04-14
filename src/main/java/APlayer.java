@@ -7,7 +7,7 @@ public abstract class APlayer {
     public abstract Set<Piece> getCheckers();
     public abstract GameBoard move(APlayer opponent);
     protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
-    protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
+    protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y,int limit);
     protected abstract GameBoard makeMove(APlayer opponent, Piece piece, int x, int y);
     protected abstract GameBoard jump(APlayer opponent, Piece piece, int x, int y);
 
@@ -91,7 +91,7 @@ public abstract class APlayer {
         for (Piece piece : temp) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    if (isValidJump(opponent, piece, i, j)) {
+                    if (isValidJump(opponent, piece, i, j,4)) {
                         GameBoard game = jump(opponent, piece, i, j);
                         gameList.add(game);
                     }

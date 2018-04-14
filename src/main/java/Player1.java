@@ -94,8 +94,8 @@ public class Player1 extends APlayer {
         return false;
     }
 
-    public boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {
-        if(x < 0 || x > 7) {
+    public boolean isValidJump(APlayer opponent, Piece piece, int x, int y, int limit) {
+        if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0) {
             return false;
         }
         int row = piece.getRow();
@@ -106,14 +106,14 @@ public class Player1 extends APlayer {
             Piece piece3 = new Piece(row-2, getColumn(column-2), true);
             Piece piece4 = new Piece(row-2, getColumn(column+2), true);
             return x==row-2 && y==column-2 && hasPlayers(opponent, row-1, getColumn(column-1)) &&
-                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y)
+                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y,limit-1)
                     || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
-                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y);
+                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y,limit-1);
         }
         return x==row+2 && y== column-2 && hasPlayers(opponent, row +1, getColumn(column -1)) &&
-                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y) ||
+                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y,limit-1) ||
                 x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
-                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y);
+                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y,limit-1);
     }
 
     public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
