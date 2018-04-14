@@ -5,12 +5,7 @@ import java.util.Set;
 
 public class Player1Test {
 
-    Player player = new Player1();
-
-    @Test
-    public void shouldReturnCorrectName(){
-        assertEquals(player.getPlayerName(),"Player1");
-    }
+    Player1 player = new Player1();
 
     @Test
     public void shouldReturnCorrectInitialCheckers(){

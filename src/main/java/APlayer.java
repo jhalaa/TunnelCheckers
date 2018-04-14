@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /* Abstract class for both the players */
 public abstract class APlayer {
@@ -10,7 +7,7 @@ public abstract class APlayer {
     public abstract Set<Piece> getCheckers();
 
     public abstract GameBoard move(APlayer opponent);
-    protected abstract List<int[]> getAdjacent(int x, int y);
+
     protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
     public abstract List<GameBoard> getValidJumps(APlayer opponent);
     protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
@@ -106,4 +103,54 @@ public abstract class APlayer {
         }
         return kings;
     }
+
+    protected List<int[]> getAdjacent(int x, int y) {
+        List<int[]> res = new ArrayList<>();
+        int[] downleft = new int[2];
+        int[] downright = new int[2];
+        int[] upleft = new int[2];
+        int[] upright = new int[2];
+        if (x == 0) {
+            getDown(x, res, downleft, y - 1);
+            getDown(x, res, downright, y + 1);
+            return res;
+        }
+        if (x == 7) {
+            getUp(x, res, upleft, y - 1);
+            getUp(x, res, upright, y + 1);
+            return res;
+        }
+        getDown(x, res, downleft, y - 1);
+        getDown(x, res, downright, y + 1);
+        getUp(x, res, upleft, y - 1);
+        getUp(x, res, upright, y + 1);
+        return res;
+    }
+
+    public void getDown(int x, List<int[]> res, int[] down, int columnNum){
+        down[0] = x + 1;
+        down[1] = getColumn(columnNum);
+        res.add(down);
+    }
+
+    public void getUp(int x, List<int[]> res, int[] up, int columnNum) {
+        up[0] = x - 1;
+        up[1] = getColumn(columnNum);
+        res.add(up);
+    }
+
+    public boolean hasPlayers(APlayer opponent, int x, int y) {
+        Iterator<Piece> iterator = opponent.getCheckers().iterator();
+        while(iterator.hasNext()){
+            Piece piece = iterator.next();
+            if(piece.getRow()==x && piece.getColumn()==y)
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isEmpty(APlayer opponent,int x, int y) {
+        return !hasPlayers(opponent,x,y) && !hasPlayers(this,x,y);
+    }
+
 }

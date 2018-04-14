@@ -52,7 +52,7 @@ public class GameBoard {
             return 1;
         }
         if (player1.getCheckers().size() == player2.getCheckers().size()) {
-            return player1.getKings().size() - player2.getKings().size();
+            return player1.getKings(player1.getCheckers()).size() - player2.getKings(player2.getCheckers()).size();
         }
         return player1.getCheckers().size() - player2.getCheckers().size();
     }
@@ -61,17 +61,4 @@ public class GameBoard {
         return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
                 || player1.move(this.getPlayer2()) == null || player2.move(this.getPlayer1()) == null;
     }
-
-    public void play() {
-        while(!this.gameOver()){
-            if(this.currentTurn == 0) {
-                player1.move(this.getPlayer2());
-                this.setCurrentTurn(1);
-            } else {
-                player2.move(this.getPlayer1());
-                this.setCurrentTurn(0);
-            }
-        }
-    }
-
 }

@@ -62,43 +62,6 @@ public class Player1 extends APlayer {
         return gameList.get(rand.nextInt(gameList.size()));
     }
 
-
-    protected List<int[]> getAdjacent(int x, int y) {
-        List<int[]> res = new ArrayList<>();
-        int[] downleft = new int[2];
-        int[] downright = new int[2];
-        int[] upleft = new int[2];
-        int[] upright = new int[2];
-        if (x == 0) {
-            getDown(x, res, downleft, y - 1);
-            getDown(x, res, downright, y + 1);
-            return res;
-        }
-        if (x == 7) {
-            getUp(x, res, upleft, y - 1);
-            getUp(x, res, upright, y + 1);
-            return res;
-        }
-        getDown(x, res, downleft, y - 1);
-        getDown(x, res, downright, y + 1);
-        getUp(x, res, upleft, y - 1);
-        getUp(x, res, upright, y + 1);
-        return res;
-    }
-
-    private void getDown(int x, List<int[]> res, int[] down, int columnNum) {
-        down[0] = x + 1;
-        down[1] = getColumn(columnNum);
-        res.add(down);
-    }
-
-    private void getUp(int x, List<int[]> res, int[] up, int columnNum) {
-        up[0] = x - 1;
-        up[1] = getColumn(columnNum);
-        res.add(up);
-    }
-
-
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
         Piece newPiece = null;
         if (piece.isKing() || x == NUMBER_OF_COLUMNS - 1) {
@@ -124,7 +87,7 @@ public class Player1 extends APlayer {
                 return y == getColumn(preY - 1) || y == getColumn(preY + 1);
             }
         }
-        if (x == preX + 1) {
+        if (preX != 7 && x == preX + 1) {
             return y == getColumn(preY - 1) || y == getColumn(preY + 1);
         }
 
@@ -134,20 +97,6 @@ public class Player1 extends APlayer {
     @Override
     public List<GameBoard> getValidJumps(APlayer opponent) {
         return null;
-    }
-
-    private boolean isEmpty(APlayer opponent,int x, int y) {
-        return !hasPlayers(opponent,x,y) && !hasPlayers(this,x,y);
-    }
-
-    private boolean hasPlayers(APlayer opponent, int x, int y) {
-        Iterator<Piece> iterator = opponent.getCheckers().iterator();
-        while(iterator.hasNext()){
-            Piece piece = iterator.next();
-            if(piece.getRow()==x && piece.getColumn()==y)
-                return true;
-        }
-        return false;
     }
 
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {

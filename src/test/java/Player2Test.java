@@ -10,10 +10,6 @@ public class Player2Test {
 
     private Player2 player = new Player2();
 
-    @Test
-    public void shouldReturnCorrectName(){
-         assertEquals(player.getPlayerName(),"Player2");
-    }
 
     @Test
     public void shouldReturnCorrectInitialCheckers(){
