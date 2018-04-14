@@ -139,21 +139,21 @@ public class Player1 extends APlayer {
         if(piece.isKing() && x < row) {
             Piece piece3 = new Piece(row-2, getColumn(column-2), true);
             Piece piece4 = new Piece(row-2, getColumn(column+2), true);
-            if(x==row-2 && y==getColumn(column-2) && hasPlayers(opponent, row-1, getColumn(column-1)) &&
+            if(newBoard.getPlayer1().isValidJump(newBoard.getPlayer2(),piece3,x,y,4) || x==row-2 && y==getColumn(column-2) && hasPlayers(opponent, row-1, getColumn(column-1)) &&
                     isEmpty(opponent, row-2, getColumn(column-2))) {
                 newBoard.getPlayer2().getCheckers().remove(new Piece(row-1,getColumn(column-1)));
                 newBoard.getPlayer1().getCheckers().remove(piece);
                 newBoard.getPlayer1().getCheckers().add(piece3);
                 return newBoard.getPlayer1().jump(newBoard.getPlayer2(), piece3, x, y);
             }
-            if (x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
+            if (newBoard.getPlayer1().isValidJump(newBoard.getPlayer2(),piece4,x,y,4) || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
                     isEmpty(opponent, row-2, getColumn(column+2))) {
                 newBoard.getPlayer2().getCheckers().remove(new Piece(row-1, getColumn(column+1)));
                 newBoard.getPlayer1().getCheckers().remove(piece);
                 newBoard.getPlayer1().getCheckers().add(piece4);
                 return newBoard.getPlayer1().jump(newBoard.getPlayer2(), piece4, x, y);
             }
-        } else if (x==row+2 && y== getColumn(column-2) && hasPlayers(opponent, row +1, getColumn(column -1)) &&
+        } else if (newBoard.getPlayer1().isValidJump(newBoard.getPlayer2(),piece1,x,y,4) || x==row+2 && y== getColumn(column-2) && hasPlayers(opponent, row +1, getColumn(column -1)) &&
                 isEmpty(opponent, row +2, getColumn(column -2))) {
             newBoard.getPlayer2().getCheckers().remove(new Piece(row+1, getColumn(column-1)));
             newBoard.getPlayer1().getCheckers().remove(piece);
@@ -162,7 +162,7 @@ public class Player1 extends APlayer {
             }
             newBoard.getPlayer1().getCheckers().add(piece1);
             return newBoard.getPlayer1().jump(newBoard.getPlayer2(), piece1, x, y);
-        } else if (x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
+        } else if (newBoard.getPlayer1().isValidJump(newBoard.getPlayer2(),piece2,x,y,4) || x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
                 isEmpty(opponent, row +2, getColumn(column +2))) {
             newBoard.getPlayer2().getCheckers().remove(new Piece(row+1, getColumn(column+1)));
             newBoard.getPlayer1().getCheckers().remove(piece);
@@ -173,9 +173,9 @@ public class Player1 extends APlayer {
             return newBoard.getPlayer1().jump(newBoard.getPlayer2(), piece2, x, y);
         }
         newBoard.getPlayer1().getCheckers().remove(piece);
-        if (x == 7) {
-            piece.setKing(true);
-        }
+//        if (x == 7) {
+//            piece.setKing(true);
+//        }
         newBoard.getPlayer1().getCheckers().add(new Piece(x,y,piece.isKing()));
         return newBoard;
     }

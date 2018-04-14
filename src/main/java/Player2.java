@@ -62,7 +62,7 @@ public class Player2 extends APlayer {
 
 
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y, int limit) {
-        if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0) {
+        if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0 || hasNoPieceAround(piece)) {
             return false;
         }
         int row = piece.getRow();
@@ -81,6 +81,12 @@ public class Player2 extends APlayer {
                 isEmpty(opponent, row - 2, getColumn(column - 2)) || isValidJump(opponent, piece1, x, y,limit-1) ||
                 x == row - 2 && y == getColumn(column + 2) && hasPlayers(opponent, row - 1, getColumn(column + 1)) &&
                         isEmpty(opponent, row - 2, getColumn(column + 2)) || isValidJump(opponent, piece2, x, y,limit-1);
+    }
+
+    private boolean hasNoPieceAround(Piece piece) {
+        int row = piece.getRow();
+        int col = piece.getColumn();
+        return
     }
 
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
@@ -116,21 +122,21 @@ public class Player2 extends APlayer {
         if (piece.isKing() && x > row) {
             Piece piece3 = new Piece(row + 2, getColumn(column - 2), true);
             Piece piece4 = new Piece(row + 2, getColumn(column + 2), true);
-            if (x == row + 2 && y == getColumn(column - 2) && hasPlayers(opponent, row + 1, getColumn(column - 1)) &&
+            if (newBoard.getPlayer2().isValidJump(newBoard.getPlayer1(),piece3,x,y,4) || x == row + 2 && y == getColumn(column - 2) && hasPlayers(opponent, row + 1, getColumn(column - 1)) &&
                     isEmpty(opponent, row + 2, getColumn(column - 2))) {
                 newBoard.getPlayer1().getCheckers().remove(new Piece(row + 1, getColumn(column - 1)));
                 newBoard.getPlayer2().getCheckers().remove(piece);
                 newBoard.getPlayer2().getCheckers().add(piece3);
                 return newBoard.getPlayer2().jump(newBoard.getPlayer1(), piece3, x, y);
             }
-            if (x == row + 2 && y == getColumn(column + 2) && hasPlayers(opponent, row + 1, getColumn(column + 1)) &&
+            if (newBoard.getPlayer2().isValidJump(newBoard.getPlayer1(),piece4,x,y,4) || x == row + 2 && y == getColumn(column + 2) && hasPlayers(opponent, row + 1, getColumn(column + 1)) &&
                     isEmpty(opponent, row + 2, getColumn(column + 2))) {
                 newBoard.getPlayer1().getCheckers().remove(new Piece(row + 1, getColumn(column + 1)));
                 newBoard.getPlayer2().getCheckers().remove(piece);
                 newBoard.getPlayer2().getCheckers().add(piece4);
                 return newBoard.getPlayer2().jump(newBoard.getPlayer1(), piece4, x, y);
             }
-        } else if (x == row - 2 && y == getColumn(column - 2) && hasPlayers(opponent, row - 1, getColumn(column - 1)) &&
+        } else if (newBoard.getPlayer2().isValidJump(newBoard.getPlayer1(),piece1,x,y,4) || x == row - 2 && y == getColumn(column - 2) && hasPlayers(opponent, row - 1, getColumn(column - 1)) &&
                 isEmpty(opponent, row - 2, getColumn(column - 2))) {
             newBoard.getPlayer1().getCheckers().remove(new Piece(row - 1, getColumn(column - 1)));
             newBoard.getPlayer2().getCheckers().remove(piece);
@@ -139,7 +145,7 @@ public class Player2 extends APlayer {
             }
             newBoard.getPlayer2().getCheckers().add(piece1);
             return newBoard.getPlayer2().jump(newBoard.getPlayer1(), piece1, x, y);
-        } else if (x == row - 2 && y == getColumn(column + 2) && hasPlayers(opponent, row - 1, getColumn(column + 1)) &&
+        } else if (newBoard.getPlayer2().isValidJump(newBoard.getPlayer1(),piece2,x,y,4) || x == row - 2 && y == getColumn(column + 2) && hasPlayers(opponent, row - 1, getColumn(column + 1)) &&
                 isEmpty(opponent, row - 2, getColumn(column + 2))) {
             newBoard.getPlayer1().getCheckers().remove(new Piece(row - 1, getColumn(column + 1)));
             newBoard.getPlayer2().getCheckers().remove(piece);
@@ -150,9 +156,9 @@ public class Player2 extends APlayer {
             return newBoard.getPlayer2().jump(newBoard.getPlayer1(), piece2, x, y);
         }
         newBoard.getPlayer2().getCheckers().remove(piece);
-        if (x == 0) {
-            piece.setKing(true);
-        }
+//        if (x == 0) {
+//            piece.setKing(true);
+//        }
         newBoard.getPlayer2().getCheckers().add(new Piece(x,y,piece.isKing()));
         return newBoard;
     }
