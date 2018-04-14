@@ -94,11 +94,6 @@ public class Player1 extends APlayer {
         return false;
     }
 
-    @Override
-    public List<GameBoard> getValidJumps(APlayer opponent) {
-        return null;
-    }
-
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {
         if(x < 0 || x > 7) {
             return false;

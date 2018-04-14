@@ -49,22 +49,6 @@ public class Player2 extends APlayer {
         return null;
     }
 
-    @Override
-    public List<GameBoard> getValidJumps(APlayer opponent) {
-        List<GameBoard> gameList = new ArrayList<>();
-        for (Piece piece : this.checkers) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if (isValidJump(opponent, piece, i, j)) {
-                        GameBoard game = jump(opponent, piece, i, j);
-                        gameList.add(game);
-                    }
-
-                }
-            }
-        }
-        return gameList;
-    }
 
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y) {
         if (x < 0 || x > 7) {

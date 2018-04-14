@@ -5,11 +5,8 @@ public abstract class APlayer {
 
     private static final int NUMBER_OF_COLUMNS = 8;
     public abstract Set<Piece> getCheckers();
-
     public abstract GameBoard move(APlayer opponent);
-
     protected abstract boolean isValidMove(APlayer opponent, Piece piece, int x, int y);
-    public abstract List<GameBoard> getValidJumps(APlayer opponent);
     protected abstract boolean isValidJump(APlayer opponent, Piece piece, int x, int y);
     protected abstract GameBoard makeMove(APlayer opponent, Piece piece, int x, int y);
     protected abstract GameBoard jump(APlayer opponent, Piece piece, int x, int y);
@@ -68,7 +65,9 @@ public abstract class APlayer {
 
     List<GameBoard> getAllValidMoves(APlayer opponent) {
         List<GameBoard> res = new ArrayList<>();
-        for (Piece checker : getCheckers()) {
+        Set<Piece> temp = new HashSet<>();
+        temp.addAll(getCheckers());
+        for (Piece checker : temp) {
             int row = checker.getRow();
             int column = checker.getColumn();
             List<int[]> adjacent = getAdjacent(row, column);
@@ -83,6 +82,24 @@ public abstract class APlayer {
         }
         res.addAll(getValidJumps(opponent));
         return res;
+    }
+
+    public List<GameBoard> getValidJumps(APlayer opponent) {
+        List<GameBoard> gameList = new ArrayList<>();
+        Set<Piece> temp = new HashSet<>();
+        temp.addAll(this.getCheckers());
+        for (Piece piece : temp) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (isValidJump(opponent, piece, i, j)) {
+                        GameBoard game = jump(opponent, piece, i, j);
+                        gameList.add(game);
+                    }
+
+                }
+            }
+        }
+        return gameList;
     }
 
     public int getColumn(int columnNum){
