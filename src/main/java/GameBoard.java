@@ -68,22 +68,24 @@ public class GameBoard {
                 if(player1.getCheckers().contains(new Piece(i, j))) {
                     Piece temp = player1.getChecker(i, j);
                     if (temp.isKing()) {
-                        System.out.print("1K");
+                        System.out.print("|1K");
                     } else {
-                        System.out.print("1");
+                        System.out.print("|⚫");
                     }
                 } else if(player2.getCheckers().contains(new Piece(i, j))) {
                     Piece temp = player2.getChecker(i, j);
                     if (temp.isKing()) {
-                        System.out.print("2K");
+                        System.out.print("|2K");
                     } else {
-                        System.out.print("2");
+                        System.out.print("|⚪");
                     }
                 } else {
-                    System.out.print("  ");
+                    System.out.print("|  ");
                 }
             }
             System.out.println("");
         }
+        System.out.println("");
+        System.out.println("");
     }
 }
