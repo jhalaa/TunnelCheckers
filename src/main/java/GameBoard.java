@@ -1,13 +1,11 @@
 public class GameBoard {
     private APlayer player1;
     private APlayer player2;
-    //private int numberOfTurns;
     private int currentTurn; //0 or 1 to refer to PLAYER1 or PLAYER2
 
     public GameBoard(){
         player1 = new Player1();
         player2 = new Player2();
-        //numberOfTurns = 0;
         currentTurn = 0;
     }
 
@@ -25,18 +23,8 @@ public class GameBoard {
         return player2;
     }
 
-//    public int getNumberOfTurns() {
-//        return numberOfTurns;
-//    }
-
-
     public int getCurrentTurn() {
         return currentTurn;
-    }
-
-
-    public void setCurrentTurn(int currentTurn) {
-        this.currentTurn = currentTurn;
     }
 
     /**
@@ -45,10 +33,10 @@ public class GameBoard {
      * and 0 means a draw.
      */
     public int checkWin(){
-        if (player1.move(this.getPlayer2()) == null) {
+        if (player1.getAllValidMoves(this.getPlayer2()).size() == 0) {
             return -1;
         }
-        if (player2.move(this.getPlayer1()) == null) {
+        if (player2.getAllValidMoves(this.getPlayer2()).size() == 0) {
             return 1;
         }
         if (player1.getCheckers().size() == player2.getCheckers().size()) {
@@ -59,6 +47,6 @@ public class GameBoard {
 
     public boolean gameOver() {
         return player1.getCheckers().size() == 0 || player2.getCheckers().size() == 0
-                || player1.move(this.getPlayer2()) == null || player2.move(this.getPlayer1()) == null;
+                || player1.getAllValidMoves(this.getPlayer2()).size() == 0 || player2.getAllValidMoves(this.getPlayer2()).size() == 0;
     }
 }
