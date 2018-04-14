@@ -1,13 +1,11 @@
 public class GameBoard {
     private APlayer player1;
     private APlayer player2;
-    //private int numberOfTurns;
     private int currentTurn; //0 or 1 to refer to PLAYER1 or PLAYER2
 
     public GameBoard(){
         player1 = new Player1();
         player2 = new Player2();
-        //numberOfTurns = 0;
         currentTurn = 0;
     }
 
@@ -24,11 +22,6 @@ public class GameBoard {
     public APlayer getPlayer2() {
         return player2;
     }
-
-//    public int getNumberOfTurns() {
-//        return numberOfTurns;
-//    }
-
 
     public int getCurrentTurn() {
         return currentTurn;
