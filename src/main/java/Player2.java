@@ -138,6 +138,8 @@ public class Player2 extends APlayer {
             newBoard.getPlayer2().getCheckers().add(piece2);
             return jump(newBoard.getPlayer1(), piece2, x, y);
         }
+        newBoard.getPlayer2().getCheckers().remove(piece);
+        newBoard.getPlayer2().getCheckers().add(new Piece(x,y,piece.isKing()));
         return newBoard;
     }
 

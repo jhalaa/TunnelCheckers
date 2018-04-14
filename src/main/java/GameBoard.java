@@ -56,8 +56,10 @@ public class GameBoard {
     }
 
     public void printBoard() {
-        System.out.println("-------------------------");
+        System.out.println("     0  1  2  3  4  5  6  7 ");
+        System.out.println("-----------------------------");
         for (int i = 0; i < 8; i++) {
+            System.out.print(i +"  ");
             for (int j = 0; j < 8; j++) {
                 if(player1.getCheckers().contains(new Piece(i, j))) {
                     Piece temp = player1.getChecker(i, j);
@@ -80,7 +82,7 @@ public class GameBoard {
             System.out.print("|");
             System.out.println("");
         }
-        System.out.println("-------------------------");
+        System.out.println("-----------------------------");
         System.out.println("");
         System.out.println("");
     }
