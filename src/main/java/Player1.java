@@ -102,26 +102,52 @@ public class Player1 extends APlayer {
         return false;
     }
 
+
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y, int limit) {
         if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0) {
             return false;
         }
         int row = piece.getRow();
         int column = piece.getColumn();
-        Piece piece1 = new Piece(row+2,getColumn(column-2),piece.isKing());
-        Piece piece2 = new Piece(row+2,getColumn(column+2),piece.isKing());
-        if(piece.isKing() && x < row) {
-            Piece piece3 = new Piece(row-2, getColumn(column-2), true);
-            Piece piece4 = new Piece(row-2, getColumn(column+2), true);
-            return x==row-2 && y==getColumn(column-2) && hasPlayers(opponent, row-1, getColumn(column-1)) &&
-                    isEmpty(opponent, row-2, getColumn(column-2)) || isValidJump(opponent, piece3, x, y,limit-1)
-                    || x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
-                    isEmpty(opponent, row-2, getColumn(column+2)) || isValidJump(opponent, piece4, x, y,limit-1);
+        Piece piece1 = new Piece(row + 2, getColumn(column - 2), piece.isKing());
+        Piece piece2 = new Piece(row + 2, getColumn(column + 2), piece.isKing());
+        Piece piece3 = new Piece(row - 2, getColumn(column - 2), true);
+        Piece piece4 = new Piece(row - 2, getColumn(column + 2), true);
+        if(isValidSingleJump1(opponent, x, y, row, column) || isValidSingleJump2(opponent, x, y, row, column))
+            return true;
+        else if(isValidSingleJump1(opponent, row+2, column-2, row, column) && isValidJump(opponent,piece1,x,y,limit-1))
+            return true;
+        else if(isValidSingleJump2(opponent, row+2, column+2, row, column) && isValidJump(opponent,piece2,x,y,limit-1))
+            return true;
+        else if(piece.isKing() && x > row) {
+            if(isValidSingleJump3(opponent, x, y, row, column) || isValidSingleJump4(opponent, x, y, row, column))
+                return true;
+            else if(isValidSingleJump1(opponent, row-2, column-2, row, column) && isValidJump(opponent,piece3,x,y,limit-1))
+                return true;
+            else if(isValidSingleJump2(opponent, row-2, column+2, row, column) && isValidJump(opponent,piece4,x,y,limit-1))
+                return true;
         }
+        return false;
+    }
+
+    private boolean isValidSingleJump4(APlayer opponent, int x, int y, int row, int column) {
+        return x==row-2 && y==getColumn(column+2) && hasPlayers(opponent, row-1,getColumn(column+1)) &&
+                isEmpty(opponent, row-2, getColumn(column+2));
+    }
+
+    private boolean isValidSingleJump3(APlayer opponent, int x, int y, int row, int column) {
+        return x==row-2 && y==getColumn(column-2) && hasPlayers(opponent, row-1, getColumn(column-1)) &&
+                isEmpty(opponent, row-2, getColumn(column-2));
+    }
+
+    private boolean isValidSingleJump2(APlayer opponent, int x, int y, int row, int column) {
+        return x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
+                isEmpty(opponent, row +2, getColumn(column +2));
+    }
+
+    private boolean isValidSingleJump1(APlayer opponent, int x, int y, int row, int column) {
         return x==row+2 && y== getColumn(column-2) && hasPlayers(opponent, row +1, getColumn(column -1)) &&
-                isEmpty(opponent, row +2, getColumn(column -2)) || isValidJump(opponent,piece1,x,y,limit-1) ||
-                x==row+2 && y== getColumn(column+2) && hasPlayers(opponent, row +1, getColumn(column +1)) &&
-                        isEmpty(opponent, row +2, getColumn(column +2)) || isValidJump(opponent,piece2,x,y,limit-1);
+                isEmpty(opponent, row +2, getColumn(column -2));
     }
 
     public GameBoard jump(APlayer opponent, Piece piece, int x, int y) {
