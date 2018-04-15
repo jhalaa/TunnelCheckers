@@ -173,9 +173,9 @@ public class Player1 extends APlayer {
             return newBoard.getPlayer1().jump(newBoard.getPlayer2(), piece2, x, y);
         }
         newBoard.getPlayer1().getCheckers().remove(piece);
-//        if (x == 7) {
-//            piece.setKing(true);
-//        }
+        if (x == 7) {
+            piece.setKing(true);
+        }
         newBoard.getPlayer1().getCheckers().add(new Piece(x,y,piece.isKing()));
         return newBoard;
     }

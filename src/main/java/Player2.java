@@ -62,7 +62,7 @@ public class Player2 extends APlayer {
 
 
     public boolean isValidJump(APlayer opponent, Piece piece, int x, int y, int limit) {
-        if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0 || hasNoPieceAround(piece)) {
+        if(x < 0 || x > 7 || piece.getRow()<0 || piece.getRow()>7 || limit<0) {
             return false;
         }
         int row = piece.getRow();
@@ -83,11 +83,11 @@ public class Player2 extends APlayer {
                         isEmpty(opponent, row - 2, getColumn(column + 2)) || isValidJump(opponent, piece2, x, y,limit-1);
     }
 
-    private boolean hasNoPieceAround(Piece piece) {
-        int row = piece.getRow();
-        int col = piece.getColumn();
-        return
-    }
+//    private boolean hasNoPieceAround(Piece piece) {
+//        int row = piece.getRow();
+//        int col = piece.getColumn();
+//        return
+//    }
 
     public GameBoard makeMove(APlayer opponent, Piece piece, int x, int y) {
         GameBoard newBoard = new GameBoard();
@@ -156,9 +156,9 @@ public class Player2 extends APlayer {
             return newBoard.getPlayer2().jump(newBoard.getPlayer1(), piece2, x, y);
         }
         newBoard.getPlayer2().getCheckers().remove(piece);
-//        if (x == 0) {
-//            piece.setKing(true);
-//        }
+        if (x == 0) {
+            piece.setKing(true);
+        }
         newBoard.getPlayer2().getCheckers().add(new Piece(x,y,piece.isKing()));
         return newBoard;
     }
