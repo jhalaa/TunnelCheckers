@@ -2,6 +2,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/jhalaa/TunnelCheckers/badge.svg?branch=master)](https://coveralls.io/github/jhalaa/TunnelCheckers?branch=master)
 [![Build Status](https://travis-ci.org/jhalaa/TunnelCheckers.svg?branch=master)](https://travis-ci.org/jhalaa/TunnelCheckers)
 
+### PROJECT BY: Ying Chen  and Jhalaa Chinoy
+
 #### In our game player1 is the AI agent and player2 is us. 
 #### To run the game just run the main class. We need to input the row and column number each time.
 
