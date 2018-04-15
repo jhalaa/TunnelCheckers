@@ -41,7 +41,7 @@ public class Player2 extends APlayer {
             checkers.add(new Piece(newRow, newColumn, piece.isKing()));
             return new GameBoard(opponent, this, 0);
         }
-        else if(isValidJump(opponent,piece, newRow, newColumn,4)) {
+        else if(piece!=null && isValidJump(opponent,piece, newRow, newColumn,4)) {
             return jump(opponent,new Piece(row, column), newRow, newColumn);
         }
         else {
